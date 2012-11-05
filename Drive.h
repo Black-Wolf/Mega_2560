@@ -14,6 +14,7 @@ public:
 	void fw();
 	void forward(int debug, int motor, int speed);
 	void backward(int debug, int motor, int speed);
+	void stop(int debug, int motor);
 
 private:
 	void rampUp(int maxSpeed, int motor);

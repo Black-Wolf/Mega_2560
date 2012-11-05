@@ -40,14 +40,54 @@ void Drive::init(int verbose) {
 }
 
 void Drive::forward(int debug, int motor, int speed) {
-	//Ramp select options:	1=> Up	2=> Down
+	//Motor select options:	1=> Both only	2=> Right only	3=> Left only
 
+	//Each case tests current speed vs desired speed then call
+	//then appropriate ramp function to change speed.
+
+	// set direction to forwards
+
+	switch (motor) {
+	case '1':
+
+		break;
+	case '2':
+
+		break;
+	case '3':
+
+		break;
+	default:
+
+		break;
+	}
 }
 
 void Drive::backward(int debug, int motor, int speed) {
-	//Ramp select options:	1=> Up	2=> Down
+	//Motor select options:	1=> Both only	2=> Right only	3=> Left only
+
+	//Set direction to backwards
+
+	switch (motor) {
+	case '1':
+
+		break;
+	case '2':
+
+		break;
+	case '3':
+
+		break;
+	default:
+
+		break;
+	}
 
 }
+
+void Drive::stop(int debug, int motor) {
+	rampDown(0, motor);
+};
 
 void Drive::rampUp(int maxSpeed, int motor) {
 	//Motor select options:	1=> Both only	2=> Right only	3=> Left only	

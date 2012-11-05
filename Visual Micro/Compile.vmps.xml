@@ -19,7 +19,7 @@
         <VCCodeMacro Name="__extension__" Value="" />
         <VCCodeMacro Name="__ATTR_PURE__" Value="" />
         <VCCodeMacro Name="version" Value="0.1" />
-        <VCCodeMacro Name="version" Value="0.5" />
+        <VCCodeMacro Name="version" Value="1.1" />
         <VCCodeMacro Name="__ATTR_CONST__" Value="" />
         <VCCodeMacro Name="version" Value="1.0" />
         <VCCodeMacro Name="version" Value="0.1" />
