@@ -30,16 +30,16 @@
         <VCCodeMacro Name="RMclkPin" Value="2" />
         <VCCodeMacro Name="__volatile__" Value="" />
         <VCCodeMacro Name="debug" Value="0" />
-        <VCCodeMacro Name="RMdirPin" Value="3" />
+        <VCCodeMacro Name="RMdirPin" Value="42" />
         <VCCodeMacro Name="__builtin_va_list" Value="" />
         <VCCodeMacro Name="development" Value="0" />
-        <VCCodeMacro Name="RMprePin" Value="4" />
+        <VCCodeMacro Name="RMprePin" Value="43" />
         <VCCodeMacro Name="__builtin_va_start" Value="" />
-        <VCCodeMacro Name="LMclkPin" Value="5" />
+        <VCCodeMacro Name="LMclkPin" Value="3" />
         <VCCodeMacro Name="__builtin_va_end" Value="" />
-        <VCCodeMacro Name="LMdirPin" Value="6" />
+        <VCCodeMacro Name="LMdirPin" Value="44" />
         <VCCodeMacro Name="__DOXYGEN__" Value="" />
-        <VCCodeMacro Name="LMprePin" Value="7" />
+        <VCCodeMacro Name="LMprePin" Value="45" />
         <VCCodeMacro Name="prog_void" Value="" />
         <VCCodeMacro Name="PGM_VOID_P" Value="int" />
         <VCCodeMacro Name="NOINLINE" Value="__attribute__((noinline))" />
