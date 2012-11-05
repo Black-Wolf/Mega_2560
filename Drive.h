@@ -12,8 +12,8 @@ public:
 	Drive();
 	void init(int verbose);
 	void fw();
-	void forward(int debug, int motor, int ramp);
-	void backward(int debug, int motor, int ramp);
+	void forward(int debug, int motor, int speed);
+	void backward(int debug, int motor, int speed);
 
 private:
 	void rampUp(int maxSpeed, int motor);
@@ -26,5 +26,4 @@ private:
 	int LMdir;	//current Left Motor direction
 	int LMpre;	//current Left Motor preset
 	int BMspe;	//current Both Motor Speed
-	int rampArray[14]; //motor speed ramping array
 };
