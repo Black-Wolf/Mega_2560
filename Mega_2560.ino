@@ -9,12 +9,14 @@
 #include "DTMF.h"
 #include "Target.h"
 
-#define version 1.0	// Software version
+#define version 1.0		// Software version
 
-#define verbose 2 // Verbose information output setting
-#define debug 0 // Debug information output setting
-#define development 0 // Testing mode for development purposes
+#define verbose 3		// Verbose information output setting
+#define debug 0			// Debug information output setting
+#define development 0	// Testing mode for development purposes
 
+int TCCReraser = 7;
+int TCCRpre = 1;
 int indexIn = 0;
 int blocks = 0;
 int frequency = 0;
@@ -30,11 +32,16 @@ void setup() {
 
 	if (verbose >= 1) Serial.println("Buggy mainboard booting...");
 
-	nav.init(verbose);	// Initialise navigation class ready for use
-	dtmf.init(verbose);	// Initialise DTMF class ready for use
-	target.init(verbose);	// Initialise target analysis class ready for use
+	TCCR3B &= ~TCCReraser;		// Erase Timer 3 Pre-scale value
+	TCCR4B &= ~TCCReraser;		// Erase Timer 4 Pre-scale value
+	TCCR3B |= TCCRpre;			// Write 1 to Pre-scale. ~32Khz
+	TCCR4B |= TCCRpre;			// Write 1 to Pre-scale. ~32Khz
 
-	if (verbose >= 1) Serial.println("Buggy mainboard ready");
+	nav.init(verbose, debug);	// Initialise navigation class ready for use
+	dtmf.init(verbose);			// Initialise DTMF class ready for use
+	target.init(verbose);		// Initialise target analysis class ready for use
+
+	if (verbose >= 1) Serial.println("-> Buggy mainboard ready <-");
 }
 
 void loop() {
@@ -49,7 +56,7 @@ void loop() {
 				blocks = (10 * (commandIn[1] - 48)) + (commandIn[2] - 48);
 				if(debug >= 1) Serial.println(blocks);
 
-				if (nav.forward(verbose,debug,blocks) == true){
+				if (nav.forward(verbose, debug, blocks) == true){
 					Serial.println("D");
 				}
 				break;
@@ -58,21 +65,21 @@ void loop() {
 				blocks = (10 * (commandIn[1] - 48)) + (commandIn[2] - 48);
 				if(debug >= 1) Serial.println(blocks);
 
-				if (nav.backward(verbose,debug,blocks) == true){
+				if (nav.backward(verbose, debug, blocks) == true){
 					Serial.println("D");
 				}
 				break;
 
 			case 'l':	// Turn left
 
-				if (nav.turnLeft(verbose,debug) == true){
+				if (nav.turnLeft(verbose, debug) == true){
 					Serial.println("D");
 				}
 				break;
 
 			case 'r':	// Turn right
 
-				if (nav.turnRight(verbose,debug) == true){
+				if (nav.turnRight(verbose, debug) == true){
 					Serial.println("D");
 				}
 				break;
@@ -97,13 +104,13 @@ void loop() {
 			case 'v':	// Perform victory roll
 
 				for (int v = 0; v == 6; v++){
-					nav.turnRight(verbose,debug);	// 2.5 full turns right
+					nav.turnRight(verbose, debug);	// 2.5 full turns right
 				}
 				nav.forward(verbose,debug,1);		// forward 1 block
 				for (int v = 0; v== 2; v++) {
-					nav.turnLeft(verbose,debug);	// 0.5 full turns left
+					nav.turnLeft(verbose, debug);	// 0.5 full turns left
 				}
-				nav.forward(verbose,debug,1);		// forward 1 block back to start location
+				nav.forward(verbose, debug,1);		// forward 1 block back to start location
 
 				Serial.println("D");
 				break;

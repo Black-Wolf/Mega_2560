@@ -2,11 +2,12 @@
   <Program Name="Mega_2560" Ext=".ino" Location="C:\Users\Black Wolf\Dropbox\UoB\Work\Projects\Buggy\Arduino\Mega_2560">
     <Compile CompilerErrors="0" ConfigurationName="Debug" StopOnError="False" OptimiseLibs="True" OptimiseCore="True" BuildPath="C:\Users\Black Wolf\AppData\Local\VMicro\Arduino\Builds\Mega_2560\mega2560" IncludeDebug="0" IncludesDebug="0" SketchName="Mega_2560" IsCompiled="1" />
     <Platform Name="Arduino">
-      <Board Name="mega2560" Description="Arduino Mega 2560 or Mega ADK" CoreFolder="C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0.1\hardware\arduino\cores\arduino" VariantFullPath="C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0.1\hardware\arduino\variants\mega" />
+      <Board Name="mega2560" Description="Arduino Mega 2560 or Mega ADK" CoreFolder="C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0\hardware\arduino\cores\arduino" VariantFullPath="C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0\hardware\arduino\variants\mega" />
     </Platform>
+    <Debug AutoReportFreeMemory="0" AutoReportAnalogPinsFrequency="" />
     <VCCodeModel>
       <VCCodeMacros>
-        <VCCodeMacro Name="ARDUINO" Value="101" />
+        <VCCodeMacro Name="ARDUINO" Value="10" />
         <VCCodeMacro Name="__AVR_ATmega2560__" Value="" />
         <VCCodeMacro Name="F_CPU" Value="16000000L" />
         <VCCodeMacro Name="version" Value="0.1" />
@@ -19,33 +20,46 @@
         <VCCodeMacro Name="__extension__" Value="" />
         <VCCodeMacro Name="__ATTR_PURE__" Value="" />
         <VCCodeMacro Name="version" Value="0.1" />
-        <VCCodeMacro Name="version" Value="0.5" />
-        <VCCodeMacro Name="version" Value="0.1" />
+        <VCCodeMacro Name="VERSION" Value="2.0" />
         <VCCodeMacro Name="__ATTR_CONST__" Value="" />
         <VCCodeMacro Name="version" Value="1.0" />
         <VCCodeMacro Name="__inline__" Value="" />
         <VCCodeMacro Name="rampDelay" Value="10" />
         <VCCodeMacro Name="__asm__" Value="" />
-        <VCCodeMacro Name="verbose" Value="2" />
+        <VCCodeMacro Name="verbose" Value="3" />
         <VCCodeMacro Name="RMclkPin" Value="2" />
         <VCCodeMacro Name="__volatile__" Value="" />
         <VCCodeMacro Name="debug" Value="0" />
-        <VCCodeMacro Name="RMdirPin" Value="3" />
+        <VCCodeMacro Name="RMdirPin" Value="40" />
         <VCCodeMacro Name="__builtin_va_list" Value="" />
         <VCCodeMacro Name="development" Value="0" />
-        <VCCodeMacro Name="RMprePin" Value="4" />
+        <VCCodeMacro Name="RMprePin" Value="41" />
+        <VCCodeMacro Name="NUM_SENSORS" Value="8" />
         <VCCodeMacro Name="__builtin_va_start" Value="" />
-        <VCCodeMacro Name="LMclkPin" Value="5" />
+        <VCCodeMacro Name="LMclkPin" Value="3" />
+        <VCCodeMacro Name="TIMEOUT" Value="2500" />
         <VCCodeMacro Name="__builtin_va_end" Value="" />
-        <VCCodeMacro Name="LMdirPin" Value="6" />
+        <VCCodeMacro Name="LMdirPin" Value="42" />
+        <VCCodeMacro Name="EMITTER_PIN" Value="22" />
         <VCCodeMacro Name="__DOXYGEN__" Value="" />
-        <VCCodeMacro Name="LMprePin" Value="7" />
+        <VCCodeMacro Name="LMprePin" Value="43" />
+        <VCCodeMacro Name="THRESHOLD" Value="500" />
         <VCCodeMacro Name="prog_void" Value="" />
+        <VCCodeMacro Name="CAL_LOOPS" Value="400" />
         <VCCodeMacro Name="PGM_VOID_P" Value="int" />
+        <VCCodeMacro Name="VERSION" Value="1.0" />
         <VCCodeMacro Name="NOINLINE" Value="__attribute__((noinline))" />
+        <VCCodeMacro Name="QTRSensors_h" Value="" />
+        <VCCodeMacro Name="QTR_EMITTERS_OFF" Value="0" />
+        <VCCodeMacro Name="QTR_RC" Value="0" />
+        <VCCodeMacro Name="QTR_EMITTERS_ON" Value="1" />
+        <VCCodeMacro Name="QTR_A" Value="1" />
+        <VCCodeMacro Name="QTR_EMITTERS_ON_AND_OFF" Value="2" />
+        <VCCodeMacro Name="QTR_NO_EMITTER_PIN" Value="255" />
+        <VCCodeMacro Name="QTR_MAX_SENSORS" Value="16" />
       </VCCodeMacros>
       <VCCodeVariables>
-        <VCCodeVariable Name="indexIn" />
+        <VCCodeVariable Name="TCCReraser" />
       </VCCodeVariables>
     </VCCodeModel>
   </Program>
