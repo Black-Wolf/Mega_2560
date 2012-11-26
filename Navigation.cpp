@@ -29,10 +29,9 @@ void Navigation::init(int verbose, int debug) {
 	blocks = 0;
 }
 
-//Motor select options:		|	Ramp select options:
-//1=> Both only				|	1=> Up
-//2=> Right only			|	2=> Down
-//3=> Left only				|
+//------------------------------------------------------------------------//
+// Motor select options:	1=> Both only	2=> Right only	3=> Left only //
+//------------------------------------------------------------------------//
 
 bool Navigation::forward(int verbose, int debug, int blocks) {
 

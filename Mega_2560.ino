@@ -9,12 +9,14 @@
 #include "DTMF.h"
 #include "Target.h"
 
-#define version 1.0	// Software version
+#define version 1.0		// Software version
 
-#define verbose 3 // Verbose information output setting
-#define debug 0 // Debug information output setting
-#define development 0 // Testing mode for development purposes
+#define verbose 3		// Verbose information output setting
+#define debug 0			// Debug information output setting
+#define development 0	// Testing mode for development purposes
 
+int TCCReraser = 7;
+int TCCRpre = 1;
 int indexIn = 0;
 int blocks = 0;
 int frequency = 0;
@@ -30,9 +32,14 @@ void setup() {
 
 	if (verbose >= 1) Serial.println("Buggy mainboard booting...");
 
+	TCCR3B &= ~TCCReraser;		// Erase Timer 3 Pre-scale value
+	TCCR4B &= ~TCCReraser;		// Erase Timer 4 Pre-scale value
+	TCCR3B |= TCCRpre;			// Write 1 to Pre-scale. ~32Khz
+	TCCR4B |= TCCRpre;			// Write 1 to Pre-scale. ~32Khz
+
 	nav.init(verbose, debug);	// Initialise navigation class ready for use
-	dtmf.init(verbose);	// Initialise DTMF class ready for use
-	target.init(verbose);	// Initialise target analysis class ready for use
+	dtmf.init(verbose);			// Initialise DTMF class ready for use
+	target.init(verbose);		// Initialise target analysis class ready for use
 
 	if (verbose >= 1) Serial.println("-> Buggy mainboard ready <-");
 }

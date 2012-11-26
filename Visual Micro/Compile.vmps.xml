@@ -4,10 +4,13 @@
     <Platform Name="Arduino">
       <Board Name="mega2560" Description="Arduino Mega 2560 or Mega ADK" CoreFolder="C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0\hardware\arduino\cores\arduino" VariantFullPath="C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0\hardware\arduino\variants\mega" />
     </Platform>
+    <Debug AutoReportFreeMemory="0" AutoReportAnalogPinsFrequency="" />
     <VCCodeModel>
       <VCCodeMacros>
         <VCCodeMacro Name="ARDUINO" Value="10" />
+        <VCCodeMacro Name="PID_v1_h" Value="" />
         <VCCodeMacro Name="__AVR_ATmega2560__" Value="" />
+        <VCCodeMacro Name="LIBRARY_VERSION" Value="1.0.0" />
         <VCCodeMacro Name="F_CPU" Value="16000000L" />
         <VCCodeMacro Name="version" Value="0.1" />
         <VCCodeMacro Name="version" Value="0.1" />
@@ -24,16 +27,20 @@
         <VCCodeMacro Name="version" Value="1.0" />
         <VCCodeMacro Name="__inline__" Value="" />
         <VCCodeMacro Name="rampDelay" Value="10" />
+        <VCCodeMacro Name="AUTOMATIC" Value="1" />
         <VCCodeMacro Name="__asm__" Value="" />
         <VCCodeMacro Name="verbose" Value="3" />
         <VCCodeMacro Name="RMclkPin" Value="2" />
+        <VCCodeMacro Name="MANUAL" Value="0" />
         <VCCodeMacro Name="__volatile__" Value="" />
         <VCCodeMacro Name="debug" Value="0" />
         <VCCodeMacro Name="RMdirPin" Value="40" />
+        <VCCodeMacro Name="DIRECT" Value="0" />
         <VCCodeMacro Name="__builtin_va_list" Value="" />
         <VCCodeMacro Name="development" Value="0" />
         <VCCodeMacro Name="RMprePin" Value="41" />
         <VCCodeMacro Name="NUM_SENSORS" Value="8" />
+        <VCCodeMacro Name="REVERSE" Value="1" />
         <VCCodeMacro Name="__builtin_va_start" Value="" />
         <VCCodeMacro Name="LMclkPin" Value="3" />
         <VCCodeMacro Name="TIMEOUT" Value="2500" />
@@ -58,7 +65,7 @@
         <VCCodeMacro Name="QTR_MAX_SENSORS" Value="16" />
       </VCCodeMacros>
       <VCCodeVariables>
-        <VCCodeVariable Name="indexIn" />
+        <VCCodeVariable Name="TCCReraser" />
       </VCCodeVariables>
     </VCCodeModel>
   </Program>

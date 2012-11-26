@@ -4,5 +4,6 @@
     <Platform Name="Arduino">
       <Board Name="mega2560" Description="Arduino Mega 2560 or Mega ADK" CoreFolder="C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0\hardware\arduino\cores\arduino" VariantFullPath="C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0\hardware\arduino\variants\mega" />
     </Platform>
+    <Debug AutoReportFreeMemory="0" AutoReportAnalogPinsFrequency="" />
   </Program>
 </VisualMicro>

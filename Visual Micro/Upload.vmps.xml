@@ -4,6 +4,7 @@
     <Platform Name="Arduino">
       <Board Name="mega2560" Description="Arduino Mega 2560 or Mega ADK" CoreFolder="C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0\hardware\arduino\cores\arduino" VariantFullPath="C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0\hardware\arduino\variants\mega" />
     </Platform>
+    <Debug AutoReportFreeMemory="0" AutoReportAnalogPinsFrequency="" />
     <VCCodeModel>
       <VCCodeMacros>
         <VCCodeMacro Name="ARDUINO" Value="10" />
@@ -58,7 +59,7 @@
         <VCCodeMacro Name="QTR_MAX_SENSORS" Value="16" />
       </VCCodeMacros>
       <VCCodeVariables>
-        <VCCodeVariable Name="indexIn" />
+        <VCCodeVariable Name="TCCReraser" />
       </VCCodeVariables>
     </VCCodeModel>
   </Program>

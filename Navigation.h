@@ -7,6 +7,7 @@
 
 #include "Drive.h"
 #include "Line.h"
+#include "PID_v1.h"
 #include "Arduino.h"
 
 class Navigation {
