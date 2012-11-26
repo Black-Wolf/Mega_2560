@@ -13,7 +13,7 @@ class Navigation {
 public:
 	Navigation();
 	void fw();
-	void init(int verbose);
+	void init(int verbose, int debug);
 	bool forward(int verbose, int debug, int blocks);
 	bool backward(int verbose, int debug, int blocks);
 	bool turnRight(int verbose, int debug);

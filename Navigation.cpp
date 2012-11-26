@@ -22,10 +22,10 @@ void Navigation::fw() {
 	line.fw();
 }
 
-void Navigation::init(int verbose) {
+void Navigation::init(int verbose, int debug) {
 	if (verbose >= 2) Serial.println("Navigation init...");
 	drive.init(verbose);
-	line.init(verbose);
+	line.init(verbose, debug);
 	blocks = 0;
 }
 

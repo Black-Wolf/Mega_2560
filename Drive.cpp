@@ -8,15 +8,15 @@
 #include "Drive.h"
 #include "Arduino.h"
 
-#define version	1.1	// Software version
+#define VERSION	2.0	// Software version
 
 #define rampDelay	10	 // Delay between speed step changes
 #define RMclkPin	2	// Right Motor clock pin
-#define RMdirPin	42	// Right motor direction pin
-#define RMprePin	43	// Right Motor preset pin
+#define RMdirPin	40	// Right motor direction pin
+#define RMprePin	41	// Right Motor preset pin
 #define LMclkPin	3	// Left Motor clock pin
-#define LMdirPin	44	// Left Motor direction pin
-#define LMprePin	45	// Left Motor preset pin
+#define LMdirPin	42	// Left Motor direction pin
+#define LMprePin	43	// Left Motor preset pin
 
 Drive::Drive() {
 
@@ -24,12 +24,12 @@ Drive::Drive() {
 
 void Drive::fw() {
 	Serial.print("Drv: ");
-	Serial.print(version);
+	Serial.print(VERSION);
 	Serial.println();
 }
 
 void Drive::init(int verbose) {
-	if (verbose >= 2) Serial.println("-> drive init");
+	if (verbose >= 3) Serial.println("|_ Drive init...");
 	Drive::RMspe = 0;
 	Drive::RMdir = 0;
 	Drive::RMpre = 0;
@@ -39,185 +39,294 @@ void Drive::init(int verbose) {
 	Drive::BMspe = 0;
 }
 
-void Drive::forward(int debug, int motor, int speed) {
+void Drive::forward(int verbose, int debug, int motor, int speed) {
 	//Motor select options:	1=> Both only	2=> Right only	3=> Left only
 
 	//-> Check direction is set to forwards
 	//-> test current speed vs desired speed then call appropriate ramp function to change speed.
 
 	switch (motor) {
-	case '1':
+	case 1:
+		if (verbose >= 3) Serial.println("Forward: Case 1 - Both Motors");
 		if (RMdir == 0) {
 			RMdir = 1;
 			//digital write direction to pin
+			if (verbose >= 3) Serial.println("Forward: Setting RMdir");
+			digitalWrite(RMdirPin, RMdir);
 		}
-		if (LMdir == 0) {
-			RMdir = 1;
-			//digital write direction to pin
-		}
-
-		if (speed > BMspe) {
-			rampUp(speed, motor);
-		}
-		else if (speed < BMspe) {
-			rampDown(speed, motor);
-		}
-		else {
-		}
-		break;
-
-	case '2':
-		if (RMdir == 0) {
-			RMdir = 1;
-			//digital write direction to pin
-		}
-
-		if (speed > BMspe) {
-			rampUp(speed, motor);
-		}
-		else if (speed < BMspe) {
-			rampDown(speed, motor);
-		}
-		else {
-		}
-		break;
-
-	case '3':
 		if (LMdir == 0) {
 			LMdir = 1;
 			//digital write direction to pin
+			if (verbose >= 3) Serial.println("Forward: Setting LMdir");
+			digitalWrite(LMdirPin, LMdir);
 		}
 
 		if (speed > BMspe) {
-			rampUp(speed, motor);
+			if (verbose >= 3) Serial.println("Forward: rampUp called");
+			rampUp(debug, speed, motor);
 		}
 		else if (speed < BMspe) {
-			rampDown(speed, motor);
+			if (verbose >= 3) Serial.println("Forward: rampDown called");
+			rampDown(debug, speed, motor);
 		}
-		else {
+		else if (speed == BMspe) {
+			if (verbose >= 3) Serial.println("Forward: Nothing called");
 		}
 		break;
+
+	case 2:
+		if (verbose >= 3) Serial.println("Forward: Case 2 - Right Motor");
+		if (RMdir == 0) {
+			RMdir = 1;
+			//digital write direction to pin
+			if (verbose >= 3) Serial.println("Forward: Setting RMdir");
+			digitalWrite(RMdirPin, RMdir);
+		}
+
+		if (speed > RMspe) {
+			if (verbose >= 3) Serial.println("Forward: rampUp called");
+			rampUp(debug, speed, motor);
+		}
+		else if (speed < RMspe) {
+			if (verbose >= 3) Serial.println("Forward: rampDown called");
+			rampDown(debug, speed, motor);
+		}
+		else if (speed == RMspe) {
+			if (verbose >= 3) Serial.println("Forward: Nothing called");
+		}
+		break;
+
+	case 3:
+		if (verbose >= 3) Serial.println("Forward: Case 3 - Left Motor");
+		if (LMdir == 0) {
+			LMdir = 1;
+			//digital write direction to pin
+			if (verbose >= 3) Serial.println("Forward: Setting LMdir");
+			digitalWrite(LMdirPin, LMdir);
+		}
+
+		if (speed > LMspe) {
+			if (verbose >= 3) Serial.println("Forward: rampUp called");
+			rampUp(debug, speed, motor);
+		}
+		else if (speed < LMspe) {
+			if (verbose >= 3) Serial.println("Forward: rampDown called");
+			rampDown(debug, speed, motor);
+		}
+		else if (speed == LMspe) {
+			if (verbose >= 3) Serial.println("Forward: Nothing called");
+		}
+		break;
+
+	default:
+
+		break;
+
 	}
 }
 
-void Drive::backward(int debug, int motor, int speed) {
+void Drive::backward(int verbose, int debug, int motor, int speed) {
 	//Motor select options:	1=> Both only	2=> Right only	3=> Left only
 
 	//-> Check direction is set to forwards
 	//-> Each case tests current speed vs desired speed then calls then appropriate ramp function to change speed.
 
 	switch (motor) {
-	case '1':
+	case 1:
+		if (verbose >= 3) Serial.println("Backward: Case 1 - Both Motors");
 		if (RMdir == 1) {
 			RMdir = 0;
 			//digital write direction to pin
+			if (verbose >= 3) Serial.println("Backward: Setting RMdir");
+			digitalWrite(RMdirPin, RMdir);
 		}
 		if (LMdir == 1) {
 			RMdir = 0;
 			//digital write direction to pin
+			if (verbose >= 3) Serial.println("Backward: Setting LMdir");
+			digitalWrite(LMdirPin, LMdir);
 		}
 
 		if (speed > BMspe) {
-			rampUp(speed, motor);
+			if (verbose >= 3) Serial.println("Backward: rampUp called");
+			rampUp(debug, speed, motor);
 		}
 		else if (speed < BMspe) {
-			rampDown(speed, motor);
+			if (verbose >= 3) Serial.println("Backward: rampDown called");
+			rampDown(debug, speed, motor);
 		}
-		else {
+		else if (speed == BMspe) {
+			if (verbose >= 3) Serial.println("Backward: Nothing called");
 		}
 		break;
 
-	case '2':
+	case 2:
+		if (verbose >= 3) Serial.println("Backward: Case 1 - Both Motors");
 		if (RMdir == 1) {
 			RMdir = 0;
 			//digital write direction to pin
+			if (verbose >= 3) Serial.println("Backward: Setting RMdir");
+			digitalWrite(RMdirPin, RMdir);
 		}
 
-		if (speed > BMspe) {
-			rampUp(speed, motor);
+		if (speed > RMspe) {
+			if (verbose >= 3) Serial.println("Backward: rampUp called");
+			rampUp(debug, speed, motor);
 		}
-		else if (speed < BMspe) {
-			rampDown(speed, motor);
+		else if (speed < RMspe) {
+			if (verbose >= 3) Serial.println("Backward: rampDown called");
+			rampDown(debug, speed, motor);
 		}
-		else {
+		else if (speed == RMspe) {
+			if (verbose >= 3) Serial.println("Backward: Nothing called");
 		}
 		break;
 
-	case '3':
+	case 3:
+		if (verbose >= 3) Serial.println("Backward: Case 1 - Both Motors");
 		if (LMdir == 1) {
 			LMdir = 0;
 			//digital write direction to pin
+			if (verbose >= 3) Serial.println("Backward: Setting LMdir");
+			digitalWrite(LMdirPin, LMdir);
 		}
 
-		if (speed > BMspe) {
-			rampUp(speed, motor);
+		if (speed > LMspe) {
+			if (verbose >= 3) Serial.println("Backward: rampUp called");
+			rampUp(debug, speed, motor);
 		}
-		else if (speed < BMspe) {
-			rampDown(speed, motor);
+		else if (speed < LMspe) {
+			if (verbose >= 3) Serial.println("Backward: rampDown called");
+			rampDown(debug, speed, motor);
 		}
-		else {
+		else if (speed == LMspe) {
+			if (verbose >= 3) Serial.println("Backward: Nothing called");
 		}
 		break;
+
+	default:
+
+		break;
+
 	}
 }
 
-void Drive::stop(int debug, int motor = 1) {
-	rampDown(0, motor);
+void Drive::stop(int verbose, int debug, int motor = 1) {
+	if (verbose >= 3) Serial.println("Stop!");
+	rampDown(debug, 0, motor);
 };
 
-void Drive::rampUp(int maxSpeed, int motor) {
+void Drive::rampUp(int debug, int maxSpeed, int motor) {
 	//Motor select options:	1=> Both only	2=> Right only	3=> Left only	
 	switch (motor) {
-	case '1':
-		for (int i = BMspe; i <= maxSpeed; i++) {
+	case 1:
+		if (debug >= 4) Serial.println("rampUp: Case 1 - Both Motors");
+		int i;
+		for (i = BMspe; i <= maxSpeed; i++) {
 			//write 'i' to output
+			if (debug >= 5) Serial.print("rampUp: ");
+			if (debug >= 5) Serial.print(i);
+			if (debug >= 5) Serial.println();
+			analogWrite(RMclkPin, i);
+			analogWrite(LMclkPin, i);
 		}
+		i--;
 		//sync new speed to BMspe
+		BMspe = i;
 		//sync new speed to RMspe
+		RMspe = i;
 		//sync new speed to LMspe
+		LMspe = i;
 		break;
 
-	case '2':
+	case 2:
+		if (debug >= 4) Serial.println("rampUp: Case 2 - Right Motor");
 		for (int i = RMspe; i <= maxSpeed; i++) {
 			//write 'i' to output
+			if (debug >= 5) Serial.print("rampUp: ");
+			if (debug >= 5) Serial.print(i);
+			if (debug >= 5) Serial.println();
+			analogWrite(RMclkPin, i);
 		}
+		i--;
 		//sync new speed to RMspe
+		RMspe = i;
 		break;
 
-	case '3':
+	case 3:
+		if (debug >= 4) Serial.println("rampUp: Case 3 - Left Motor");
 		for (int i = LMspe; i <= maxSpeed; i++) {
 			//write 'i' to output
+			if (debug >= 5) Serial.print("rampUp: ");
+			if (debug >= 5) Serial.print(i);
+			if (debug >= 5) Serial.println();
+			analogWrite(LMclkPin, i);
 		}
+		i--;
 		//sync new speed to LMspe
+		LMspe = i;
 		break;
+
+	default:
+
+		break;
+
 	}
 }
 
-void Drive::rampDown(int minSpeed, int motor) {
+void Drive::rampDown(int debug, int minSpeed, int motor) {
 	//Motor select options:	1=> Both only	2=> Right only	3=> Left only
 	switch (motor) {
-	case '1':
-		for (int i = BMspe; i >= minSpeed; i--) {
+	case 1:
+		int i;
+		if (debug >= 4) Serial.println("rampDown: Case 1 - Both Motors");
+		for (i = BMspe; i >= minSpeed; i--) {
 			//write 'i' to output
+			if (debug >= 5) Serial.print("rampDown: ");
+			if (debug >= 5) Serial.print(i);
+			if (debug >= 5) Serial.println();
+			analogWrite(RMclkPin, i);
+			analogWrite(LMclkPin, i);
 		}
+		i++;
 		//sync new speed to BMspe
+		BMspe = i;
 		//sync new speed to RMspe
+		RMspe = i;
 		//sync new speed to LMspe
+		LMspe = i;
 		break;
 
-	case '2':
+	case 2:
 		for (int i = RMspe; i >= minSpeed; i--) {
 			//write 'i' to output
+			if (debug >= 5) Serial.print("rampDown: ");
+			if (debug >= 5) Serial.print(i);
+			if (debug >= 5) Serial.println();
+			analogWrite(RMclkPin, i);
 		}
+		i++;
 		//sync new speed to RMspe
+		RMspe = i;
 		break;
 
-	case '3':
+	case 3:
 		for (int i = LMspe; i >= minSpeed; i--) {
 			//write 'i' to output
+			if (debug >= 5) Serial.print("rampDown: ");
+			if (debug >= 5) Serial.print(i);
+			if (debug >= 5) Serial.println();
+			analogWrite(LMclkPin, i);
 		}
+		i++;
 		//sync new speed to LMspe
+		LMspe = i;
 		break;
+
+	default:
+
+		break;
+
 	}
 }
 

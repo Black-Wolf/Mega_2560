@@ -1,5 +1,5 @@
 //Board = Arduino Mega 2560 or Mega ADK
-#define ARDUINO 101
+#define ARDUINO 10
 #define __AVR_ATmega2560__
 #define F_CPU 16000000L
 #define __AVR__
@@ -27,8 +27,8 @@ extern "C" void __cxa_pure_virtual() {}
 //already defined in arduno.h
 //already defined in arduno.h
 
-#include "C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0.1\hardware\arduino\variants\mega\pins_arduino.h" 
-#include "C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0.1\hardware\arduino\cores\arduino\arduino.h"
+#include "C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0\hardware\arduino\variants\mega\pins_arduino.h" 
+#include "C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0\hardware\arduino\cores\arduino\arduino.h"
 #include "C:\Users\Black Wolf\Dropbox\UoB\Work\Projects\Buggy\Arduino\Mega_2560\Mega_2560.ino"
 #include "C:\Users\Black Wolf\Dropbox\UoB\Work\Projects\Buggy\Arduino\Mega_2560\DTMF.cpp"
 #include "C:\Users\Black Wolf\Dropbox\UoB\Work\Projects\Buggy\Arduino\Mega_2560\DTMF.h"
