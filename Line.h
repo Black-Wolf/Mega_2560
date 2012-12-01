@@ -20,5 +20,6 @@ public:
 
 private:
 	int pattern;
+	int position;
 	int prevPattern;
 };

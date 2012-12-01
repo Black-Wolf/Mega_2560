@@ -32,7 +32,6 @@ PID::PID(double* Input, double* Output, double* Setpoint,
     lastTime = millis()-SampleTime;				
 }
  
- 
 /* Compute() **********************************************************************
  *     This, as they say, is where the magic happens.  this function should be called
  *   every time "void loop()" executes.  the function will decide for itself whether a new
@@ -68,7 +67,6 @@ bool PID::Compute()
    }
    else return false;
 }
-
 
 /* SetTunings(...)*************************************************************
  * This function allows the controller's dynamic performance to be adjusted. 

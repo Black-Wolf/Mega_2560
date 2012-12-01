@@ -135,7 +135,7 @@ int Line::readPattern(int verbose, int debug) {
 }
 
 int Line::tracking (int verbose, int debug) {
-	int position = 0;
+	position = 0;
 
 	readArray(verbose, debug); // update array data on every line tracking request
 

@@ -8,7 +8,18 @@
 #include "Navigation.h"
 #include "Arduino.h"
 
-#define version 0.1	// Software version
+#define consKp	2
+#define consKi	5
+#define consKd	1
+#define aggKp	2
+#define aggKi	5
+#define aggKd	1
+#define SETPOINT	100
+#define MODE	0
+#define VERSION	0.1	// Software version
+
+double setpoint, input, output;
+PID pid(&input, &output, &setpoint, consKp, consKi, consKd, DIRECT);
 
 Navigation::Navigation() {
 
@@ -16,17 +27,33 @@ Navigation::Navigation() {
 
 void Navigation::fw() {
 	Serial.print("Nav: ");
-	Serial.print(version);
+	Serial.print(VERSION);
 	Serial.println();
 	drive.fw();
 	line.fw();
 }
 
 void Navigation::init(int verbose, int debug) {
-	if (verbose >= 2) Serial.println("Navigation init...");
+	if (verbose >= 2) {
+		Serial.println("Navigation init...");
+		if (MODE == 1) {
+			Serial.println("|_ *Advanced Mode*");
+		}
+		else {
+			Serial.println(" |_ *Basic Mode*");
+		}
+	}
+
+	blocks = 0;
+
+	if (verbose >= 2) Serial.println("|_ PID init...");
+	input = 0;
+	setpoint = SETPOINT;
+	pid.SetMode(MANUAL);
+	if (verbose >= 2) Serial.println("|_ PID to Manual Mode");
+
 	drive.init(verbose);
 	line.init(verbose, debug);
-	blocks = 0;
 }
 
 //------------------------------------------------------------------------//
@@ -34,21 +61,83 @@ void Navigation::init(int verbose, int debug) {
 //------------------------------------------------------------------------//
 
 bool Navigation::forward(int verbose, int debug, int blocks) {
+	if (verbose >= 3) {
+		Serial.print("Nav Forward: ");
+		Serial.print(blocks);
+		Serial.print(" Blocks");
+		Serial.println();
+	}
+
+	if (MODE == 1) {
+		// Advanced Mode
+		// -> Read tracking info to prepare for motion
+		// -> Detect if pattern has changed
+		// -> Pattern has changed then increment done blocks
+		// -> Check if we've travelled the required distance
+		// -> Compute PID
+		// -> Update wheel speed / begin motion
+
+	}
+	else {
+		// Basic Mode
+		// -> Read tracking info to prepare for motion
+		// -> Detect if pattern has changed
+		// -> Pattern has changed then increment done blocks
+		// -> Check if we've travelled the required distance
+		// -> Calculate wheel speed based on tracking info
+		// -> Update wheel speed / begin motion
+
+	}
 
 	return true;
 }
 
 bool Navigation::backward(int verbose, int debug, int blocks) {
+	if (verbose >= 3) {
+		Serial.print("Nav Backward: ");
+		Serial.print(blocks);
+		Serial.print(" Blocks");
+		Serial.println();
+	}
+
+	if (MODE == 1) {
+		// Advanced Mode
+
+	}
+	else {
+		// Basic Mode
+
+	}
 
 	return true;
 }
 
 bool Navigation::turnRight(int verbose, int debug) {
+	if (verbose >= 3) Serial.println("Nav Right");
+
+	if (MODE == 1) {
+		// Advanced Mode
+
+	}
+	else {
+		// Basic Mode
+
+	}
 
 	return true;
 }
 
 bool Navigation::turnLeft(int verbose, int debug) {
+	if (verbose >= 3) Serial.println("Nav Left");
+
+	if (MODE == 1) {
+		// Advanced Mode
+
+	}
+	else {
+		// Basic Mode
+
+	}
 
 	return true;
 }
