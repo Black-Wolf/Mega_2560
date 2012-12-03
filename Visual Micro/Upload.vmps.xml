@@ -21,47 +21,53 @@
         <VCCodeMacro Name="__asm__" Value="" />
         <VCCodeMacro Name="__extension__" Value="" />
         <VCCodeMacro Name="VERSION" Value="2.0" />
+        <VCCodeMacro Name="consKp" Value="2" />
         <VCCodeMacro Name="__ATTR_PURE__" Value="" />
         <VCCodeMacro Name="version" Value="1.0" />
-        <VCCodeMacro Name="consKp" Value="2" />
+        <VCCodeMacro Name="consKi" Value="5" />
         <VCCodeMacro Name="__ATTR_CONST__" Value="" />
         <VCCodeMacro Name="rampDelay" Value="10" />
-        <VCCodeMacro Name="consKi" Value="5" />
+        <VCCodeMacro Name="consKd" Value="1" />
         <VCCodeMacro Name="__inline__" Value="" />
         <VCCodeMacro Name="AUTOMATIC" Value="1" />
         <VCCodeMacro Name="RMclkPin" Value="2" />
         <VCCodeMacro Name="verbose" Value="3" />
-        <VCCodeMacro Name="consKd" Value="1" />
+        <VCCodeMacro Name="aggKp" Value="2" />
         <VCCodeMacro Name="__asm__" Value="" />
         <VCCodeMacro Name="MANUAL" Value="0" />
         <VCCodeMacro Name="RMdirPin" Value="40" />
         <VCCodeMacro Name="debug" Value="0" />
-        <VCCodeMacro Name="aggKp" Value="2" />
+        <VCCodeMacro Name="aggKi" Value="5" />
         <VCCodeMacro Name="__volatile__" Value="" />
         <VCCodeMacro Name="DIRECT" Value="0" />
         <VCCodeMacro Name="RMprePin" Value="41" />
         <VCCodeMacro Name="NUM_SENSORS" Value="8" />
         <VCCodeMacro Name="development" Value="0" />
-        <VCCodeMacro Name="aggKi" Value="5" />
+        <VCCodeMacro Name="aggKd" Value="1" />
         <VCCodeMacro Name="__builtin_va_list" Value="" />
         <VCCodeMacro Name="REVERSE" Value="1" />
         <VCCodeMacro Name="LMclkPin" Value="3" />
         <VCCodeMacro Name="TIMEOUT" Value="2500" />
-        <VCCodeMacro Name="aggKd" Value="1" />
+        <VCCodeMacro Name="SETPOINT" Value="100" />
         <VCCodeMacro Name="__builtin_va_start" Value="" />
         <VCCodeMacro Name="LMdirPin" Value="42" />
         <VCCodeMacro Name="EMITTER_PIN" Value="22" />
-        <VCCodeMacro Name="SETPOINT" Value="100" />
+        <VCCodeMacro Name="MODE" Value="0" />
         <VCCodeMacro Name="__builtin_va_end" Value="" />
         <VCCodeMacro Name="LMprePin" Value="43" />
         <VCCodeMacro Name="THRESHOLD" Value="500" />
-        <VCCodeMacro Name="VERSION" Value="0.1" />
+        <VCCodeMacro Name="HIGH_SPEED" Value="255" />
         <VCCodeMacro Name="__DOXYGEN__" Value="" />
         <VCCodeMacro Name="CAL_LOOPS" Value="400" />
+        <VCCodeMacro Name="MID_SPEED" Value="200" />
         <VCCodeMacro Name="prog_void" Value="" />
         <VCCodeMacro Name="VERSION" Value="1.0" />
+        <VCCodeMacro Name="LOW_SPEED" Value="150" />
         <VCCodeMacro Name="PGM_VOID_P" Value="int" />
+        <VCCodeMacro Name="LARGE_CORRECTION" Value="150" />
         <VCCodeMacro Name="NOINLINE" Value="__attribute__((noinline))" />
+        <VCCodeMacro Name="SMALL_CORRECTION" Value="200" />
+        <VCCodeMacro Name="VERSION" Value="0.1" />
         <VCCodeMacro Name="QTRSensors_h" Value="" />
         <VCCodeMacro Name="QTR_EMITTERS_OFF" Value="0" />
         <VCCodeMacro Name="QTR_RC" Value="0" />

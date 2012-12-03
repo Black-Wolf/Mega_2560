@@ -56,13 +56,18 @@
         <VCCodeMacro Name="__builtin_va_end" Value="" />
         <VCCodeMacro Name="LMprePin" Value="43" />
         <VCCodeMacro Name="THRESHOLD" Value="500" />
-        <VCCodeMacro Name="VERSION" Value="0.1" />
+        <VCCodeMacro Name="HIGH_SPEED" Value="255" />
         <VCCodeMacro Name="__DOXYGEN__" Value="" />
         <VCCodeMacro Name="CAL_LOOPS" Value="400" />
+        <VCCodeMacro Name="MID_SPEED" Value="200" />
         <VCCodeMacro Name="prog_void" Value="" />
         <VCCodeMacro Name="VERSION" Value="1.0" />
+        <VCCodeMacro Name="LOW_SPEED" Value="150" />
         <VCCodeMacro Name="PGM_VOID_P" Value="int" />
+        <VCCodeMacro Name="TURN_SPEED" Value="200" />
         <VCCodeMacro Name="NOINLINE" Value="__attribute__((noinline))" />
+        <VCCodeMacro Name="TURN_DELAY" Value="500" />
+        <VCCodeMacro Name="VERSION" Value="0.1" />
         <VCCodeMacro Name="QTRSensors_h" Value="" />
         <VCCodeMacro Name="QTR_EMITTERS_OFF" Value="0" />
         <VCCodeMacro Name="QTR_RC" Value="0" />

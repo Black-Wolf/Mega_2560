@@ -23,5 +23,9 @@ public:
 private:
 	Drive drive;
 	Line line;
-	int blocks;
+	int blocksTravelled;
+	int currPosition;
+	int currPattern;
+	int lastPattern;
+	int currSpeed;
 };

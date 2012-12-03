@@ -16,6 +16,11 @@
 #define aggKd	1
 #define SETPOINT	100
 #define MODE	0
+#define HIGH_SPEED	255
+#define MID_SPEED	200
+#define LOW_SPEED	150
+#define TURN_SPEED	200
+#define TURN_DELAY	500
 #define VERSION	0.1	// Software version
 
 double setpoint, input, output;
@@ -40,11 +45,15 @@ void Navigation::init(int verbose, int debug) {
 			Serial.println("|_ *Advanced Mode*");
 		}
 		else {
-			Serial.println(" |_ *Basic Mode*");
+			Serial.println("|_ *Basic Mode*");
 		}
 	}
 
-	blocks = 0;
+	blocksTravelled = 0;
+	currPosition = 0;
+	currPattern = 0;
+	lastPattern = 0;
+	currSpeed = 0;
 
 	if (verbose >= 2) Serial.println("|_ PID init...");
 	input = 0;
@@ -58,6 +67,7 @@ void Navigation::init(int verbose, int debug) {
 
 //------------------------------------------------------------------------//
 // Motor select options:	1=> Both only	2=> Right only	3=> Left only //
+// Position options:	+ve=> Correct left	-ve=> Correct right			  //					
 //------------------------------------------------------------------------//
 
 bool Navigation::forward(int verbose, int debug, int blocks) {
@@ -76,7 +86,20 @@ bool Navigation::forward(int verbose, int debug, int blocks) {
 		// -> Check if we've travelled the required distance
 		// -> Compute PID
 		// -> Update wheel speed / begin motion
+		blocksTravelled = 0;
+		while (blocksTravelled < blocks) {
 
+			currPosition = line.tracking(verbose, debug);
+			currPattern = line.getPattern();
+
+			if (currPattern != lastPattern) {
+				blocks++;
+				lastPattern = currPattern;
+			}
+
+			// more code goes here
+
+		}
 	}
 	else {
 		// Basic Mode
@@ -85,10 +108,94 @@ bool Navigation::forward(int verbose, int debug, int blocks) {
 		// -> Pattern has changed then increment done blocks
 		// -> Check if we've travelled the required distance
 		// -> Calculate wheel speed based on tracking info
+		// -> Check if in motion or not
 		// -> Update wheel speed / begin motion
+		blocksTravelled = 0;
+		while (blocksTravelled < blocks) {
 
+			currPosition = line.tracking(verbose, debug);
+			currPattern = line.getPattern();
+
+			if (currPattern != lastPattern) {
+				blocks++;
+				lastPattern = currPattern;
+			}
+
+			if (currPosition == 0) {
+				// forwards full speed
+				currSpeed = HIGH_SPEED;
+				drive.forward(verbose, debug, 1, currSpeed);
+			}
+			else if (currPosition > 0) {
+				//correction left
+				if (currPosition < 4) {
+					// small correction left
+					// -> check if in motion or not
+					if (currSpeed == 0) {
+						// -> drive right motor slowly
+						currSpeed = LOW_SPEED;
+						drive.forward(verbose, debug, 2, currSpeed);
+					}
+					else {
+						// -> slow left motor
+						currSpeed = MID_SPEED;
+						drive.forward(verbose, debug, 3, currSpeed);
+					}
+
+				}
+				else {
+					// large correction left
+					// -> check if in motion or not
+					if (currSpeed == 0) {
+						// -> drive right motor slowly
+						currSpeed = MID_SPEED;
+						drive.forward(verbose, debug, 2, currSpeed);
+					}
+					else {
+						// -> slow left motor
+						currSpeed = LOW_SPEED;
+						drive.forward(verbose, debug, 3, currSpeed);
+					}
+
+				}
+			}
+			else if (currPosition < 0) {
+				// correction right
+				if (currPosition < 4) {
+					// small correction right
+					// -> check if in motion or not
+					if (currSpeed == 0) {
+						// -> drive left motor slowly
+						currSpeed = LOW_SPEED;
+						drive.forward(verbose, debug, 3, currSpeed);
+					}
+					else {
+						// -> slow right motor
+						currSpeed = MID_SPEED;
+						drive.forward(verbose, debug, 2, currSpeed);
+					}
+
+				}
+				else {
+					// large correction right
+					// -> check if in motion or not
+					if (currSpeed == 0) {
+						// -> drive left motor slowly
+						currSpeed = MID_SPEED;
+						drive.forward(verbose, debug, 3, currSpeed);
+					}
+					else {
+						// -> slow right motor
+						currSpeed = LOW_SPEED;
+						drive.forward(verbose, debug, 2, currSpeed);
+					}
+				}
+			}
+		}
 	}
 
+	pid.SetMode(MANUAL);
+	drive.stop(verbose, debug, 1);
 	return true;
 }
 
@@ -102,13 +209,122 @@ bool Navigation::backward(int verbose, int debug, int blocks) {
 
 	if (MODE == 1) {
 		// Advanced Mode
+		// -> Read tracking info to prepare for motion
+		// -> Detect if pattern has changed
+		// -> Pattern has changed then increment done blocks
+		// -> Check if we've travelled the required distance
+		// -> Compute PID
+		// -> Update wheel speed / begin motion
+		blocksTravelled = 0;
+		while (blocksTravelled < blocks) {
 
+			currPosition = line.tracking(verbose, debug);
+			currPattern = line.getPattern();
+
+			if (currPattern != lastPattern) {
+				blocks++;
+				lastPattern = currPattern;
+			}
+
+			// more code goes here
+
+		}
 	}
 	else {
 		// Basic Mode
+		// -> Read tracking info to prepare for motion
+		// -> Detect if pattern has changed
+		// -> Pattern has changed then increment done blocks
+		// -> Check if we've travelled the required distance
+		// -> Calculate wheel speed based on tracking info
+		// -> Check if in motion or not
+		// -> Update wheel speed / begin motion
+		blocksTravelled = 0;
+		while (blocksTravelled < blocks) {
 
+			currPosition = line.tracking(verbose, debug);
+			currPattern = line.getPattern();
+
+			if (currPattern != lastPattern) {
+				blocks++;
+				lastPattern = currPattern;
+			}
+
+			if (currPosition == 0) {
+				// forwards full speed
+				currSpeed = HIGH_SPEED;
+				drive.backward(verbose, debug, 1, currSpeed);
+			}
+			else if (currPosition > 0) {
+				//correction left
+				if (currPosition < 4) {
+					// small correction left
+					// -> check if in motion or not
+					if (currSpeed == 0) {
+						// -> drive right motor slowly
+						currSpeed = LOW_SPEED;
+						drive.backward(verbose, debug, 2, currSpeed);
+					}
+					else {
+						// -> slow left motor
+						currSpeed = MID_SPEED;
+						drive.backward(verbose, debug, 3, currSpeed);
+					}
+
+				}
+				else {
+					// large correction left
+					// -> check if in motion or not
+					if (currSpeed == 0) {
+						// -> drive right motor slowly
+						currSpeed = MID_SPEED;
+						drive.backward(verbose, debug, 2, currSpeed);
+					}
+					else {
+						// -> slow left motor
+						currSpeed = LOW_SPEED;
+						drive.backward(verbose, debug, 3, currSpeed);
+					}
+
+				}
+			}
+			else if (currPosition < 0) {
+				// correction right
+				if (currPosition < 4) {
+					// small correction right
+					// -> check if in motion or not
+					if (currSpeed == 0) {
+						// -> drive left motor slowly
+						currSpeed = LOW_SPEED;
+						drive.backward(verbose, debug, 3, currSpeed);
+					}
+					else {
+						// -> slow right motor
+						currSpeed = MID_SPEED;
+						drive.backward(verbose, debug, 2, currSpeed);
+					}
+
+				}
+				else {
+					// large correction right
+					// -> check if in motion or not
+					if (currSpeed == 0) {
+						// -> drive left motor slowly
+						currSpeed = MID_SPEED;
+						drive.backward(verbose, debug, 3, currSpeed);
+					}
+					else {
+						// -> slow right motor
+						currSpeed = LOW_SPEED;
+						drive.backward(verbose, debug, 2, currSpeed);
+					}
+				}
+			}
+		}
 	}
 
+	pid.SetMode(MANUAL);
+	drive.stop(verbose, debug, 1);
 	return true;
 }
 
@@ -121,7 +337,15 @@ bool Navigation::turnRight(int verbose, int debug) {
 	}
 	else {
 		// Basic Mode
-
+		// -> Left motor FWD, right motor BKD
+		// -> update tracking info
+		// -> When position = 0 stop
+		currSpeed = TURN_SPEED;
+		drive.forward(verbose, debug, 3, currSpeed);
+		drive.backward(verbose, debug, 2, currSpeed);
+		delay(TURN_DELAY);
+		// read tracking info
+		// get to 0
 	}
 
 	return true;
@@ -136,7 +360,15 @@ bool Navigation::turnLeft(int verbose, int debug) {
 	}
 	else {
 		// Basic Mode
-
+		// -> Left motor BKD, right motor FWD
+		// -> update tracking info
+		// -> When position = 0 stop
+		currSpeed = TURN_SPEED;
+		drive.forward(verbose, debug, 2, currSpeed);
+		drive.backward(verbose, debug, 3, currSpeed);
+		delay(TURN_DELAY);
+		//read tracking info
+		//get to 0
 	}
 
 	return true;

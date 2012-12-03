@@ -203,10 +203,15 @@ int Line::tracking (int verbose, int debug) {
 		}
 	}
 
-	// +ve => Correct left
-	// -ve => Correct right
-
 	return position;
+}
+
+int Line::getPattern() {
+	return pattern;
+}
+
+int Line::getPrevPattern() {
+	return prevPattern;
 }
 
 

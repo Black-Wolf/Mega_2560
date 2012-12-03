@@ -17,6 +17,8 @@ public:
 	void readArray(int verbose, int debug);
 	int readPattern(int verbose, int debug);
 	int tracking(int verbose, int debug);
+	int getPattern();
+	int getPrevPattern();
 
 private:
 	int pattern;
