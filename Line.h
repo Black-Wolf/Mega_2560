@@ -11,17 +11,17 @@
 
 class Line {
 public:
-	Line();
-	void fw();
-	void init(int verbose, int debug);
-	void readArray(int verbose, int debug);
-	int readPattern(int verbose, int debug);
-	int tracking(int verbose, int debug);
-	int getPattern();
-	int getPrevPattern();
+Line();
+void fw();
+void init(int verbose, int debug);
+void readArray(int verbose, int debug);
+int readPattern(int verbose, int debug);
+int tracking(int verbose, int debug);
+int getPattern();
+int getPrevPattern();
 
 private:
-	int pattern;
-	int position;
-	int prevPattern;
+int pattern;
+int position;
+int prevPattern;
 };

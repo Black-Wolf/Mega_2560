@@ -2,13 +2,13 @@
   <Program Name="Mega_2560" Ext=".ino" Location="C:\Users\Black Wolf\Dropbox\UoB\Work\Projects\Buggy\Arduino\Mega_2560">
     <Compile CompilerErrors="0" ConfigurationName="Debug" StopOnError="False" OptimiseLibs="True" OptimiseCore="True" BuildPath="C:\Users\Black Wolf\AppData\Local\VMicro\Arduino\Builds\Mega_2560\mega2560" IncludeDebug="0" IncludesDebug="0" SketchName="Mega_2560" IsCompiled="1" />
     <Platform Name="Arduino">
-      <Board Name="mega2560" Description="Arduino Mega 2560 or Mega ADK" CoreFolder="C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0\hardware\arduino\cores\arduino" VariantFullPath="C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0\hardware\arduino\variants\mega" />
+      <Board Name="mega2560" Description="Arduino Mega 2560 or Mega ADK" CoreFolder="C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0.1\hardware\arduino\cores\arduino" VariantFullPath="C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0.1\hardware\arduino\variants\mega" />
     </Platform>
     <Debug AutoReportFreeMemory="0" AutoReportAnalogPinsFrequency="" />
     <VCCodeModel>
       <VCCodeMacros>
         <VCCodeMacro Name="PID_v1_h" Value="" />
-        <VCCodeMacro Name="ARDUINO" Value="10" />
+        <VCCodeMacro Name="ARDUINO" Value="101" />
         <VCCodeMacro Name="LIBRARY_VERSION" Value="1.0.0" />
         <VCCodeMacro Name="__AVR_ATmega2560__" Value="" />
         <VCCodeMacro Name="version" Value="0.1" />
@@ -64,9 +64,9 @@
         <VCCodeMacro Name="VERSION" Value="1.0" />
         <VCCodeMacro Name="LOW_SPEED" Value="150" />
         <VCCodeMacro Name="PGM_VOID_P" Value="int" />
-        <VCCodeMacro Name="LARGE_CORRECTION" Value="150" />
+        <VCCodeMacro Name="TURN_SPEED" Value="200" />
         <VCCodeMacro Name="NOINLINE" Value="__attribute__((noinline))" />
-        <VCCodeMacro Name="SMALL_CORRECTION" Value="200" />
+        <VCCodeMacro Name="TURN_DELAY" Value="500" />
         <VCCodeMacro Name="VERSION" Value="0.1" />
         <VCCodeMacro Name="QTRSensors_h" Value="" />
         <VCCodeMacro Name="QTR_EMITTERS_OFF" Value="0" />

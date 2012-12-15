@@ -15,19 +15,19 @@
 
 #define NUM_SENSORS		8		// number of sensors used
 #define TIMEOUT			2500	// waits for 2500 us for sensor outputs to go low
-#define EMITTER_PIN		22		// emitter is controlled by digital pin 2
+#define EMITTER_PIN		36		// emitter is controlled by digital pin 2
 #define THRESHOLD		500		// Line positioning threshold
 #define CAL_LOOPS		400		// Calibration loops to perform
-#define VERSION			1.0		// Software version
+#define VERSION			0.5		// Software version
 
 //int lineRead[NUM_SENSORS];
-unsigned char PIN_NUMS[] = {23, 24, 25, 26, 27, 28, 29, 30};
+unsigned char PIN_NUMS[] = {38, 40, 42, 44, 46, 48, 50, 52};
 unsigned int rawValues[NUM_SENSORS];
 unsigned int calValues[NUM_SENSORS];
 
 QTRSensorsRC QTR(PIN_NUMS, NUM_SENSORS, TIMEOUT, EMITTER_PIN);
 
-Line::Line() 
+Line::Line()
 {
 	pattern = 0;
 	prevPattern = 0;
@@ -46,9 +46,9 @@ void Line::init(int verbose, int debug) {
 	digitalWrite(13, HIGH);
 
 	if (verbose >= 1) Serial.println("|__ Sensor calibration starting...");
-	for (i = 0; i < CAL_LOOPS; i++)  // make the calibration take about 10 seconds
+	for (i = 0; i < CAL_LOOPS; i++) // make the calibration take about 10 seconds
 	{
-		QTR.calibrate();       // 400 reads all sensors 10 times at 2500 us per read (i.e. ~25 ms per call)
+		QTR.calibrate(); // 400 reads all sensors 10 times at 2500 us per read (i.e. ~25 ms per call)
 	}
 
 	if (debug >= 3) {
@@ -111,7 +111,7 @@ void Line::readArray(int verbose, int debug) {
 int Line::readPattern(int verbose, int debug) {
 	if (verbose >= 3) Serial.println("->Determining Colour Pattern");
 
-	if (calValues[0] <= THRESHOLD && calValues[7] >= THRESHOLD) 
+	if (calValues[0] <= THRESHOLD && calValues[7] >= THRESHOLD)
 	{
 		if (debug >=3) Serial.println("Found Black - White Pattern");
 		return 1;	// Black - White
@@ -149,22 +149,22 @@ int Line::tracking (int verbose, int debug) {
 	{
 		if (calValues[i] <= THRESHOLD) // Is white
 		{
-			//lineRead[i] = 1; 
+			//lineRead[i] = 1;
 			position++;
 		}
 		else // Is black
 		{
-			//lineRead[i] = 0;	
+			//lineRead[i] = 0;
 			position--;
 		}
 	}
 
 	//if (debug >= 4) {
-	//	for (int i = 0; i < NUM_SENSORS; i++)
-	//	{
-	//		Serial.print(lineRead[i]);
-	//		Serial.print(' ');
-	//	}
+	// for (int i = 0; i < NUM_SENSORS; i++)
+	// {
+	// Serial.print(lineRead[i]);
+	// Serial.print(' ');
+	// }
 	//}
 
 	if (debug >= 3) {
@@ -216,7 +216,7 @@ int Line::getPrevPattern() {
 
 
 //----------------------------------------------------------//
-// Two roads diverged in a wood and I - I took the one less	//
+// Two roads diverged in a wood and I - I took the one less //
 // traveled by, and that has made all the difference.		//
-//	-Robert Frost											//
+// -Robert Frost											//
 //----------------------------------------------------------//
