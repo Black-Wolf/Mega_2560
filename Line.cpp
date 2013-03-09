@@ -14,14 +14,17 @@
 #include "Arduino.h"
 
 #define NUM_SENSORS		8		// number of sensors used
-#define TIMEOUT			2500	// waits for 2500 us for sensor outputs to go low
+#define TIMEOUT			1500	// waits for 1500 us for sensor outputs to go low
 #define EMITTER_PIN		36		// emitter is controlled by digital pin 2
 #define THRESHOLD		500		// Line positioning threshold
 #define CAL_LOOPS		400		// Calibration loops to perform
 #define VERSION			0.5		// Software version
 
+#define WHITE			29		// White side sensor IO pin
+#define GREEN			27		// Green side sensor IO pin
+
 //int lineRead[NUM_SENSORS];
-unsigned char PIN_NUMS[] = {38, 40, 42, 44, 46, 48, 50, 52};
+unsigned char PIN_NUMS[] = {38, 42, 40, 44, 46, 48, 50, 52};
 unsigned int rawValues[NUM_SENSORS];
 unsigned int calValues[NUM_SENSORS];
 
@@ -34,45 +37,95 @@ Line::Line()
 }
 
 void Line::fw() {
-	Serial.print("Lin: ");
-	Serial.print(VERSION);
-	Serial.println();
+	#if LAPTOP_CONTROL
+		Serial.print("Lin: ");
+		Serial.print(VERSION);
+		Serial.println();
+	#else
+		Serial2.print("Lin: ");
+		Serial2.print(VERSION);
+		Serial2.println();
+	#endif
 }
 
-void Line::init(int verbose, int debug) {
-	if (verbose >= 3) Serial.println("|_ Line init...");
+void Line::init() {
+	#if VERBOSE_BOOT
+		#if LAPTOP_CONTROL
+			Serial.println("|_ Line init...");
+		#else
+			Serial2.println("|_ Line init...");
+		#endif
+	#endif
+	
+	pinMode(WHITE, INPUT);
+	pinMode(GREEN, INPUT);
 
-	int i = 0;
-	digitalWrite(13, HIGH);
+	#if CALIBRATION_ENABLED
+		int i = 0;
+		digitalWrite(13, HIGH);
 
-	if (verbose >= 1) Serial.println("|__ Sensor calibration starting...");
-	for (i = 0; i < CAL_LOOPS; i++) // make the calibration take about 10 seconds
-	{
-		QTR.calibrate(); // 400 reads all sensors 10 times at 2500 us per read (i.e. ~25 ms per call)
-	}
+		#if VERBOSE_BOOT
+			#if LAPTOP_CONTROL
+				Serial.println("|__ Sensor calibration starting...");
+				for (i = 0; i < CAL_LOOPS; i++) // make the calibration take about 5 seconds
+				{
+					QTR.calibrate(); // 400 reads all sensors 10 times at 1500 us per read (i.e. ~15 ms per call)
+				}
 
-	if (debug >= 3) {
-		// print the calibration minimum values measured when emitters were on
-		Serial.println("Calibrated Minimum: ");
-		for (i = 0; i < NUM_SENSORS; i++)
-		{
-			Serial.print(QTR.calibratedMinimumOn[i]);
-			Serial.print(' ');
-		}
-		Serial.println();
+				#if LINE_DEBUG
+					// print the calibration minimum values measured when emitters were on
+					Serial.println("Calibrated Minimum: ");
+					for (i = 0; i < NUM_SENSORS; i++)
+					{
+						Serial.print(QTR.calibratedMinimumOn[i]);
+						Serial.print(' ');
+					}
+					Serial.println();
 
-		// print the calibration maximum values measured when emitters were on
-		Serial.println("Calibrated Maximum: ");
-		for (i = 0; i < NUM_SENSORS; i++)
-		{
-			Serial.print(QTR.calibratedMaximumOn[i]);
-			Serial.print(' ');
-		}
-		Serial.println();
-	}
-	if (verbose >= 1) Serial.println("|__ Sensor calibration complete");
+					// print the calibration maximum values measured when emitters were on
+					Serial.println("Calibrated Maximum: ");
+					for (i = 0; i < NUM_SENSORS; i++)
+					{
+						Serial.print(QTR.calibratedMaximumOn[i]);
+						Serial.print(' ');
+					}
+					Serial.println();
+				#endif		
+				Serial.println("|__ Sensor calibration complete");
+				digitalWrite(13, LOW);
+			#else
+				Serial2.println("|__ Sensor calibration starting...");
+				for (i = 0; i < CAL_LOOPS; i++) // make the calibration take about 5 seconds
+				{
+					QTR.calibrate(); // 400 reads all sensors 10 times at 1500 us per read (i.e. ~15 ms per call)
+				}
 
-	digitalWrite(13, LOW);
+				if (debug >= 3) {
+					// print the calibration minimum values measured when emitters were on
+					Serial2.println("Calibrated Minimum: ");
+					for (i = 0; i < NUM_SENSORS; i++)
+					{
+						Serial2.print(QTR.calibratedMinimumOn[i]);
+						Serial2.print(' ');
+					}
+					Serial2.println();
+
+					// print the calibration maximum values measured when emitters were on
+					Serial2.println("Calibrated Maximum: ");
+					for (i = 0; i < NUM_SENSORS; i++)
+					{
+						Serial2.print(QTR.calibratedMaximumOn[i]);
+						Serial2.print(' ');
+					}
+					Serial2.println();
+					}		
+				Serial2.println("|__ Sensor calibration complete");
+				digitalWrite(13, LOW);
+			#endif
+		#endif
+	#else
+		Serial.println("|__ Sensor calibration DISABLED");
+	#endif
 }
 
 void Line::readArray(int verbose, int debug) {
@@ -134,15 +187,45 @@ int Line::readPattern(int verbose, int debug) {
 
 }
 
+int Line::readPatternSide(int verbose, int debug) {
+	if (verbose >= 3) Serial.println("->Determining Side Colour Pattern");
+
+	if (digitalRead(WHITE) == 1 && digitalRead(GREEN) == 0)
+	{
+		if (debug >=3) Serial.println("Found Black - White Pattern");
+		return 1;	// Black - White
+	}
+	else if (digitalRead(WHITE) == 0 && digitalRead(GREEN) == 1)
+	{
+		if (debug >=3) Serial.println("Found White - Black Pattern");
+		return 2;	// White - Black
+	}
+	else if (digitalRead(WHITE) == 1 && digitalRead(GREEN) == 1)
+	{
+		if (debug >=3) Serial.println("Found White - White Pattern");
+		return 3;	// White - White
+	}
+	else if (digitalRead(WHITE) == 0 && digitalRead(GREEN) == 0)
+	{
+		if (debug >=3) Serial.println("Found Black - Black Pattern");
+		return 4;	// Black - Black
+	}
+
+}
+
 int Line::tracking (int verbose, int debug) {
 	position = 0;
 
 	readArray(verbose, debug); // update array data on every line tracking request
 
 	pattern = readPattern(verbose, debug);	// determine the colour pattern under the sensor array
+	patternSide = readPatternSide(verbose, debug); //determine colour pattern on axle axis
 
-	if (pattern == 1 || pattern ==2) {
+	if (pattern == 1 || pattern == 2) {
 		prevPattern = pattern;	// if we see either 'on line' pattern store as previous pattern seen
+	}
+	if (patternSide == 1 || patternSide == 2) {
+		prevPatternSide = patternSide;	// if we see either 'on line' pattern store as previous pattern seen
 	}
 
 	for (int i = 0; i < NUM_SENSORS; i++)
@@ -212,6 +295,14 @@ int Line::getPattern() {
 
 int Line::getPrevPattern() {
 	return prevPattern;
+}
+
+int Line::getPatternSide() {
+	return patternSide;
+}
+
+int Line::getPrevPatternSide() {
+	return prevPatternSide;
 }
 
 

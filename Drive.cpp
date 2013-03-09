@@ -8,9 +8,9 @@
 #include "Drive.h"
 #include "Arduino.h"
 
-#define VERSION	2.0	// Software version
+#define VERSION	2.5	// Software version
 
-#define rampDelay	10	 // Delay between speed step changes
+#define rampDelay	1	 // Delay between speed step changes
 #define RMclkPin	3	// Right Motor clock pin
 #define RMdirPin	51	// Right motor direction pin
 #define RMprePin	49	// Right Motor preset pin
@@ -26,13 +26,26 @@ Drive::Drive() {
 }
 
 void Drive::fw() {
-	Serial.print("Drv: ");
-	Serial.print(VERSION);
-	Serial.println();
+	#if LAPTOP_CONTROL
+		Serial.print("Drv: ");
+		Serial.print(VERSION);
+		Serial.println();
+	#else
+		Serial2.print("Drv: ");
+		Serial2.print(VERSION);
+		Serial2.println();
+	#endif
 }
 
-void Drive::init(int verbose) {
-	if (verbose >= 3) Serial.println("|_ Drive init...");
+void Drive::init() {
+	#if VERBOSE_BOOT
+		#if LAPTOP_CONTROL
+			Serial.println("|_ Drive init...");
+		#else
+			Serial2.println("|_ Drive init...");
+		#endif
+	#endif
+
 	Drive::RMspe = 0;
 	Drive::RMdir = 0;
 	Drive::RMpre = 1;
@@ -47,6 +60,24 @@ void Drive::init(int verbose) {
 	analogWrite(LMclkPin, LMspe);
 	digitalWrite(LMdirPin, LMdir);
 	digitalWrite(LMprePin, LMpre);
+}
+
+void Drive::right(int verbose, int debug, int speed) {
+	if (verbose >= 3) Serial.println("Right Turn");
+	RMdir = 0;
+	LMdir = 0;
+	digitalWrite(RMdirPin, RMdir);
+	digitalWrite(LMdirPin, LMdir);
+	rampUp(debug, speed, 1);
+}
+
+void Drive::left(int verbose, int debug, int speed) {
+	if (verbose >= 3) Serial.println("Left Turn");
+	RMdir = 1;
+	LMdir = 1;
+	digitalWrite(RMdirPin, RMdir);
+	digitalWrite(LMdirPin, LMdir);
+	rampUp(debug, speed, 1);
 }
 
 void Drive::forward(int verbose, int debug, int motor, int speed) {
@@ -239,6 +270,7 @@ void Drive::rampUp(int debug, int maxSpeed, int motor) {
 			if (debug >= 5) Serial.println();
 			analogWrite(RMclkPin, i);
 			analogWrite(LMclkPin, i);
+			delay(rampDelay);
 		}
 		i--;
 		//sync new speed to BMspe
@@ -257,10 +289,13 @@ void Drive::rampUp(int debug, int maxSpeed, int motor) {
 			if (debug >= 5) Serial.print(i);
 			if (debug >= 5) Serial.println();
 			analogWrite(RMclkPin, i);
+			delay(rampDelay);
 		}
 		i--;
 		//sync new speed to RMspe
 		RMspe = i;
+		//sync new speed to BMspe
+		BMspe = 0;
 		break;
 
 	case 3:
@@ -271,10 +306,13 @@ void Drive::rampUp(int debug, int maxSpeed, int motor) {
 			if (debug >= 5) Serial.print(i);
 			if (debug >= 5) Serial.println();
 			analogWrite(LMclkPin, i);
+			delay(rampDelay);
 		}
 		i--;
 		//sync new speed to LMspe
 		LMspe = i;
+		//sync new speed to BMspe
+		BMspe = 0;
 		break;
 
 	default:
@@ -297,6 +335,7 @@ void Drive::rampDown(int debug, int minSpeed, int motor) {
 			if (debug >= 5) Serial.println();
 			analogWrite(RMclkPin, i);
 			analogWrite(LMclkPin, i);
+			delay(rampDelay);
 		}
 		i++;
 		//sync new speed to BMspe
@@ -314,10 +353,13 @@ void Drive::rampDown(int debug, int minSpeed, int motor) {
 			if (debug >= 5) Serial.print(i);
 			if (debug >= 5) Serial.println();
 			analogWrite(RMclkPin, i);
+			delay(rampDelay);
 		}
 		i++;
 		//sync new speed to RMspe
 		RMspe = i;
+		//sync new speed to BMspe
+		BMspe = 0;
 		break;
 
 	case 3:
@@ -327,10 +369,13 @@ void Drive::rampDown(int debug, int minSpeed, int motor) {
 			if (debug >= 5) Serial.print(i);
 			if (debug >= 5) Serial.println();
 			analogWrite(LMclkPin, i);
+			delay(rampDelay);
 		}
 		i++;
 		//sync new speed to LMspe
 		LMspe = i;
+		//sync new speed to BMspe
+		BMspe = 0;
 		break;
 
 	default:

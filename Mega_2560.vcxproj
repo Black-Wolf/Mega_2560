@@ -41,7 +41,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0\hardware\arduino\cores\arduino;C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0\hardware\arduino\variants\mega;c:\users\black wolf\dropbox\arduino\arduino-1.0\hardware\tools\avr\avr\include\;c:\users\black wolf\dropbox\arduino\arduino-1.0\hardware\tools\avr\avr\include\avr\;c:\users\black wolf\dropbox\arduino\arduino-1.0\hardware\tools\avr\avr\;c:\users\black wolf\dropbox\arduino\arduino-1.0\hardware\tools\avr\lib\gcc\avr\4.3.2\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0\hardware\arduino\cores\arduino;C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0\hardware\arduino\variants\mega;C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0\libraries\Wire;C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0\libraries\Wire\utility;c:\users\black wolf\dropbox\arduino\arduino-1.0\hardware\tools\avr\avr\include\;c:\users\black wolf\dropbox\arduino\arduino-1.0\hardware\tools\avr\avr\include\avr\;c:\users\black wolf\dropbox\arduino\arduino-1.0\hardware\tools\avr\avr\;c:\users\black wolf\dropbox\arduino\arduino-1.0\hardware\tools\avr\lib\gcc\avr\4.3.2\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>C:\Users\Black Wolf\Dropbox\UoB\Work\Projects\Buggy\Arduino\Mega_2560\Visual Micro\.Mega_2560.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
       <PreprocessorDefinitions>ARDUINO=10;__AVR_ATmega2560__;F_CPU=16000000L;__AVR__;__cplusplus;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -69,26 +69,33 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Beacon.h" />
+    <ClInclude Include="Config.h" />
     <ClInclude Include="Drive.h" />
     <ClInclude Include="DTMF.h" />
     <ClInclude Include="Line.h" />
     <ClInclude Include="Navigation.h" />
-    <ClInclude Include="PID_v1.h">
+    <ClInclude Include="QTRSensors.h">
       <FileType>CppCode</FileType>
     </ClInclude>
-    <ClInclude Include="QTRSensors.h">
+    <ClInclude Include="RunningAverage.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="StopWatch.h">
       <FileType>CppCode</FileType>
     </ClInclude>
     <ClInclude Include="Target.h" />
     <ClInclude Include="Visual Micro\.Mega_2560.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Beacon.cpp" />
     <ClCompile Include="Drive.cpp" />
     <ClCompile Include="DTMF.cpp" />
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="Navigation.cpp" />
-    <ClCompile Include="PID_v1.cpp" />
     <ClCompile Include="QTRSensors.cpp" />
+    <ClCompile Include="RunningAverage.cpp" />
+    <ClCompile Include="StopWatch.cpp" />
     <ClCompile Include="Target.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
@@ -96,7 +103,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties arduino.upload.port="COM3" arduino.board.name="mega2560" arduino.board.desc="Arduino Mega 2560 or Mega ADK" arduino.board.property_bag="mega2560.name=Arduino Mega 2560 or Mega ADK&#xD;&#xA;mega2560.upload.protocol=stk500v2&#xD;&#xA;mega2560.upload.maximum_size=258048&#xD;&#xA;mega2560.upload.speed=115200&#xD;&#xA;mega2560.bootloader.low_fuses=0xFF&#xD;&#xA;mega2560.bootloader.high_fuses=0xD8&#xD;&#xA;mega2560.bootloader.extended_fuses=0xFD&#xD;&#xA;mega2560.bootloader.path=stk500v2&#xD;&#xA;mega2560.bootloader.file=stk500boot_v2_mega2560.hex&#xD;&#xA;mega2560.bootloader.unlock_bits=0x3F&#xD;&#xA;mega2560.bootloader.lock_bits=0x0F&#xD;&#xA;mega2560.build.mcu=atmega2560&#xD;&#xA;mega2560.build.f_cpu=16000000L&#xD;&#xA;mega2560.build.core=arduino&#xD;&#xA;mega2560.build.variant=mega&#xD;&#xA;" arduino.build.mcu="atmega2560" arduino.build.f_cpu="16000000L" arduino.build.core="arduino" arduino.upload.protocol="stk500v2" arduino.upload.speed="115200" arduino.upload.maximum_size="258048" />
+      <UserProperties arduino.upload.port="COM12" arduino.board.name="mega2560" arduino.board.desc="Arduino Mega 2560 or Mega ADK" arduino.board.property_bag="mega2560.name=Arduino Mega 2560 or Mega ADK&#xD;&#xA;mega2560.upload.protocol=stk500v2&#xD;&#xA;mega2560.upload.maximum_size=258048&#xD;&#xA;mega2560.upload.speed=115200&#xD;&#xA;mega2560.bootloader.low_fuses=0xFF&#xD;&#xA;mega2560.bootloader.high_fuses=0xD8&#xD;&#xA;mega2560.bootloader.extended_fuses=0xFD&#xD;&#xA;mega2560.bootloader.path=stk500v2&#xD;&#xA;mega2560.bootloader.file=stk500boot_v2_mega2560.hex&#xD;&#xA;mega2560.bootloader.unlock_bits=0x3F&#xD;&#xA;mega2560.bootloader.lock_bits=0x0F&#xD;&#xA;mega2560.build.mcu=atmega2560&#xD;&#xA;mega2560.build.f_cpu=16000000L&#xD;&#xA;mega2560.build.core=arduino&#xD;&#xA;mega2560.build.variant=mega&#xD;&#xA;" arduino.build.mcu="atmega2560" arduino.build.f_cpu="16000000L" arduino.build.core="arduino" arduino.upload.protocol="stk500v2" arduino.upload.speed="115200" arduino.upload.maximum_size="258048" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

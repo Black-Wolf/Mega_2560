@@ -6,12 +6,15 @@
 //----------------------------------------------//
 
 #include "Arduino.h"
+#include "Config.h"
 
 class Drive {
 public:
 	Drive();
-	void init(int verbose);
+	void init();
 	void fw();
+	void right(int verbose, int debug, int speed);
+	void left(int verbose, int debug, int speed);
 	void forward(int verbose, int debug, int motor, int speed);
 	void backward(int verbose, int debug, int motor, int speed);
 	void stop(int verbose, int debug, int motor);

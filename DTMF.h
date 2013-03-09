@@ -5,8 +5,6 @@ class DTMF {
 public:
 	DTMF();
 	void fw();
-	void init(int verbose);
-
-private:
-
+	void init();
+	void getChar();
 };
