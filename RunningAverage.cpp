@@ -1,6 +1,5 @@
-//
-//    FILE: RunningAverage.cpp
-//  AUTHOR: Rob Tillaart
+// FILE: RunningAverage.cpp
+// AUTHOR: Rob Tillaart
 // VERSION: 0.2.02
 // PURPOSE: RunningAverage library for Arduino
 //

@@ -13,7 +13,7 @@
 #include "Arduino.h"
 #include "Config.h"
 
-#define version 1.5		// Software version
+#define version 2.5	// Software version
 
 #define verbose 2		// Verbose information output setting
 #define debug 0			// Debug information output setting
@@ -36,8 +36,8 @@ void setup() {
 	Serial2.begin(115200);
 	pinMode(13,OUTPUT);
 
-	if (verbose >= 1) Serial.println("Buggy mainboard booting...");
-	if (verbose >= 1) Serial2.println("Buggy mainboard booting...");
+	Serial.println("Buggy mainboard booting...");
+	Serial2.println("Buggy mainboard booting...");
 
 	TCCR3B &= ~TCCReraser;		// Erase Timer 3 Pre-scale value
 	TCCR4B &= ~TCCReraser;		// Erase Timer 4 Pre-scale value
@@ -49,8 +49,8 @@ void setup() {
 	target.init();		// Initialise target analysis class ready for use
 	beacon.init();		// Initialise beacon control class ready for use
 
-	if (verbose >= 1) Serial.println("-> Buggy mainboard ready <-");
-	if (verbose >= 1) Serial2.println("-> Buggy mainboard ready <-");
+	Serial.println("-> Buggy mainboard ready <-");
+	Serial2.println("-> Buggy mainboard ready <-");
 }
 
 void loop() {
@@ -63,7 +63,7 @@ void loop() {
 	#endif
 
 	#if MAIN_DEBUG 
-		Serial.print(charIn);
+		Serial.println(charIn);
 	#endif
 
 		if(charIn == '#') {	// Command termination character
@@ -76,7 +76,7 @@ void loop() {
 
 				#if MOVEMENT_ENABLED
 					beacon.active();
-					if (nav.forward(verbose, debug, blocks) == true){
+					if (nav.forward(verbose, debug, blocks, 0) == true){
 						#if LAPTOP_CONTROL 
 							Serial.println("D");
 						#else 
@@ -86,8 +86,10 @@ void loop() {
 					}
 				#else
 					#if LAPTOP_CONTROL 
+						delay(500);
 						Serial.println("D");
 					#else 
+						delay(500);
 						Serial2.println("D");
 					#endif
 				#endif
@@ -111,8 +113,10 @@ void loop() {
 					}
 				#else
 					#if LAPTOP_CONTROL 
+						delay(500);
 						Serial.println("D");
 					#else 
+						delay(500);
 						Serial2.println("D");
 					#endif
 				#endif
@@ -131,8 +135,10 @@ void loop() {
 					}
 				#else
 					#if LAPTOP_CONTROL 
+						delay(500);
 						Serial.println("D");
 					#else 
+						delay(500);
 						Serial2.println("D");
 					#endif
 				#endif
@@ -151,8 +157,10 @@ void loop() {
 					}
 				#else
 					#if LAPTOP_CONTROL 
+						delay(500);
 						Serial.println("D");
 					#else 
+						delay(500);
 						Serial2.println("D");
 					#endif
 				#endif
@@ -182,7 +190,7 @@ void loop() {
 					nav.targetEngage(verbose, debug);
 				#endif
 
-				target.analyse(commandIn[1],0);
+				target.analyse(commandIn[1],1);
 
 				#if MOVEMENT_ENABLED
 					nav.targetRetract(verbose, debug);
@@ -203,7 +211,7 @@ void loop() {
 					nav.targetEngage(verbose, debug);
 				#endif
 
-				target.analyse(commandIn[1],1);
+				target.analyse(commandIn[1],0);
 
 				#if MOVEMENT_ENABLED
 					nav.targetRetract(verbose, debug);
@@ -223,11 +231,11 @@ void loop() {
 					for (int v = 0; v < 6; v++){
 						nav.turnRight(verbose, debug);	// 2.5 full turns right
 					}
-					nav.forward(verbose,debug,1);		// forward 1 block
+					nav.forward(verbose,debug,1,0);		// forward 1 block
 					for (int v = 0; v < 2; v++) {
 						nav.turnLeft(verbose, debug);	// 0.5 full turns left
 					}
-					nav.forward(verbose, debug,1);		// forward 1 block back to start location
+					nav.forward(verbose, debug,1,0);		// forward 1 block back to start location
 				
 					#if LAPTOP_CONTROL 
 						Serial.println("D");
@@ -238,8 +246,10 @@ void loop() {
 					beacon.pulse();
 				#else
 					#if LAPTOP_CONTROL 
+						delay(500);
 						Serial.println("D");
 					#else 
+						delay(500);
 						Serial2.println("D");
 					#endif
 				#endif

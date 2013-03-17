@@ -1,5 +1,5 @@
-//    FILE: StopWatch.cpp
-//  AUTHOR: Rob Tillaart
+// FILE: StopWatch.cpp
+// AUTHOR: Rob Tillaart
 // VERSION: 0.1.03
 // PURPOSE: Simple StopWatch library for Arduino
 //

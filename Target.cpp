@@ -2,7 +2,7 @@
 #include "Arduino.h"
 
 #define version 2.0 //Software version
-#define bufferSize 20 //Size for ring buffers
+#define bufferSize 5 //Size for ring buffers
 
 int portA;
 int portB;
@@ -29,14 +29,26 @@ void Target::fw() {
 }
 
 void Target::init() {
-	#if VERBOSE_BOOT
-		Serial.println("Target init...");
-		Serial.println("|_ MCP23017 config...");
-		GPIOinit();
-		Serial.print("|_ Sample buffers length: ");
-		Serial.println(bufferSize);
+	#if LAPTOP_CONTROL
+		#if VERBOSE_BOOT
+			Serial.println("Target init...");
+			Serial.println("|_ MCP23017 config...");
+			GPIOinit();
+			Serial.print("|_ Sample buffers length: ");
+			Serial.println(bufferSize);
+		#else
+			GPIOinit();
+		#endif
 	#else
-		GPIOinit();
+			#if VERBOSE_BOOT
+			Serial2.println("Target init...");
+			Serial2.println("|_ MCP23017 config...");
+			GPIOinit();
+			Serial2.print("|_ Sample buffers length: ");
+			Serial2.println(bufferSize);
+		#else
+			GPIOinit();
+		#endif
 	#endif
 }
 
@@ -86,27 +98,29 @@ void Target::analyse(char target, int direction){
 
 				// P1->10v[R2 - 1K] GND->GND[low Z] P2->ADC
 				GPIOon(B00001100,B01010001);
-				delay(25);
+				delay(50);
 				read1.addValue(analogRead(2)+9);
 				GPIOoff(B00000000,B00000000);
-				delay(25);
+				delay(50);
 
 			#if TARGET_DEBUG
-				Serial.println(i);
+				Serial2.println(i);
 			#endif;
 			}
 
 			#if TARGET_DEBUG
-			Serial.print("Reading 1: ");
-			Serial.print(ADCtoMV(read1.getAverage()));
-			Serial.println("mV");
+			Serial2.print("Reading 1: ");
+			Serial2.print(ADCtoMV(read1.getAverage()));
+			Serial2.println("mV");
 
-			Serial.print("Component: ");
-			Serial.print( zennerValue((ADCtoMV(read1.getAverage()) + 1000)) );
-			Serial.println("V");
+			Serial2.print("Component: ");
+			Serial2.print( zennerValue((ADCtoMV(read1.getAverage()) + 1000)) );
+			Serial2.println("V");
 			#endif
 			returnValue( ADCtoMV(read1.getAverage()), 6);
+			#if MEASUREMENT_RETURN
 			returnValue( zennerValue((ADCtoMV(read1.getAverage()) + 1000)), 6);
+			#endif
 		}
 		else {
 			//GPIOon(B00001100,B01010101);
@@ -116,27 +130,29 @@ void Target::analyse(char target, int direction){
 
 				// P1->10v[R2 - 1K] GND->GND[low Z] P2->ADC
 				GPIOon(B00001100,B01010101);
-				delay(25);
+				delay(50);
 				read1.addValue(analogRead(2)+9);
 				GPIOoff(B00000000,B00000000);
-				delay(25);
+				delay(50);
 
 			#if TARGET_DEBUG
-				Serial.println(i);
+				Serial2.println(i);
 			#endif;
 			}
 
 			#if TARGET_DEBUG
-			Serial.print("Reading 1: ");
-			Serial.print(ADCtoMV(read1.getAverage()));
-			Serial.println("mV");
+			Serial2.print("Reading 1: ");
+			Serial2.print(ADCtoMV(read1.getAverage()));
+			Serial2.println("mV");
 
-			Serial.print("Component: ");
-			Serial.print( zennerValue((ADCtoMV(read1.getAverage()) + 1000)) );
-			Serial.println("V");
+			Serial2.print("Component: ");
+			Serial2.print( zennerValue((ADCtoMV(read1.getAverage()) + 1000)) );
+			Serial2.println("V");
 			#endif
 			returnValue( ADCtoMV(read1.getAverage()), 6);
+			#if MEASUREMENT_RETURN
 			returnValue( zennerValue((ADCtoMV(read1.getAverage()) + 1000)), 6);
+			#endif
 		}
 		break;
 
@@ -150,54 +166,56 @@ void Target::analyse(char target, int direction){
 			for(int i=1 ; i<=bufferSize ;i++) {
 				// P1->10v[R2 - 1K] GND-> OPEN P2->GND[low Z] ADC->P1
 				GPIOon(B01100100, B01010000);
-				delay(25);
+				delay(50);
 				read1.addValue(analogRead(2)+16);
-				delay(25);
+				delay(50);
 				GPIOoff(B00000000,B00000000);
-				delay(25);
+				delay(50);
 
 				// P1->OPEN GND->10v[R2 - 1K] ADC->P2 P2->GND [low Z]
 				GPIOon(B01010010, B01010000);
-				delay(25);
+				delay(50);
 				read2.addValue(analogRead(2)+16);
-				delay(25);
+				delay(50);
 				GPIOoff(B00000000,B00000000);
-				delay(25);
+				delay(50);
 
 			#if TARGET_DEBUG
-				Serial.println(i);
+				Serial2.println(i);
 			#endif;
 			}
 
 			#if TARGET_DEBUG
-			Serial.print("Reading 1: ");
-			Serial.print(ADCtoMV(read1.getAverage()));
-			Serial.println("mV");
+			Serial2.print("Reading 1: ");
+			Serial2.print(ADCtoMV(read1.getAverage()));
+			Serial2.println("mV");
 
-			Serial.print("Ra: ");
-			Serial.print( TRmaths(ADCtoMV(read1.getAverage())) );
-			Serial.println(" Ohms");
+			Serial2.print("Ra: ");
+			Serial2.print( TRmaths(ADCtoMV(read1.getAverage())) );
+			Serial2.println(" Ohms");
 
-			Serial.print("Ra E24: ");
-			Serial.print( resistorValue( TRmaths(ADCtoMV(read1.getAverage())) ) );
-			Serial.println(" Ohms");
+			Serial2.print("Ra E24: ");
+			Serial2.print( resistorValue( TRmaths(ADCtoMV(read1.getAverage())) ) );
+			Serial2.println(" Ohms");
 
-			Serial.print("Reading 2: ");
-			Serial.print(ADCtoMV(read2.getAverage()));
-			Serial.println("mV");
+			Serial2.print("Reading 2: ");
+			Serial2.print(ADCtoMV(read2.getAverage()));
+			Serial2.println("mV");
 
-			Serial.print("Rb: ");
-			Serial.print( TRmaths(ADCtoMV(read2.getAverage())) );
-			Serial.println(" Ohms");
+			Serial2.print("Rb: ");
+			Serial2.print( TRmaths(ADCtoMV(read2.getAverage())) );
+			Serial2.println(" Ohms");
 
-			Serial.print("Rb E24: ");
-			Serial.print( resistorValue( TRmaths(ADCtoMV(read2.getAverage() ) ) ) );
-			Serial.println(" Ohms");
+			Serial2.print("Rb E24: ");
+			Serial2.print( resistorValue( TRmaths(ADCtoMV(read2.getAverage() ) ) ) );
+			Serial2.println(" Ohms");
 			#endif
 			returnValue( resistorValue(TRmaths(ADCtoMV(read1.getAverage()))), 6);
 			returnValue( resistorValue(TRmaths(ADCtoMV(read2.getAverage()))), 6);
+			#if MEASUREMENT_RETURN
 			returnValue( TRmaths(ADCtoMV(read1.getAverage())), 6);
 			returnValue( TRmaths(ADCtoMV(read2.getAverage())), 6);
+			#endif
 		}
 		else {
 			flushBuffers();
@@ -205,54 +223,56 @@ void Target::analyse(char target, int direction){
 			for(int i=1 ; i<=bufferSize ;i++) {
 				// P1->10v[R2 - 1K] GND-> OPEN P2->GND[low Z] ADC->P1
 				GPIOon(B01100100, B01010100);
-				delay(25);
+				delay(50);
 				read1.addValue(analogRead(2)+16);
-				delay(25);
+				delay(50);
 				GPIOoff(B00000000,B00000000);
-				delay(25);
+				delay(50);
 
 				// P1->OPEN GND->10v[R2 - 1K] ADC->P2 P2->GND [low Z]
 				GPIOon(B01010010, B01010100);
-				delay(25);
+				delay(50);
 				read2.addValue(analogRead(2)+16);
-				delay(25);
+				delay(50);
 				GPIOoff(B00000000,B00000000);
-				delay(25);
+				delay(50);
 
 			#if TARGET_DEBUG
-				Serial.println(i);
+				Serial2.println(i);
 			#endif;
 			}
 
 			#if TARGET_DEBUG
-			Serial.print("Reading 1: ");
-			Serial.print(ADCtoMV(read1.getAverage()));
-			Serial.println("mV");
+			Serial2.print("Reading 1: ");
+			Serial2.print(ADCtoMV(read1.getAverage()));
+			Serial2.println("mV");
 
-			Serial.print("Ra: ");
-			Serial.print( TRmaths(ADCtoMV(read1.getAverage())) );
-			Serial.println(" Ohms");
+			Serial2.print("Ra: ");
+			Serial2.print( TRmaths(ADCtoMV(read1.getAverage())) );
+			Serial2.println(" Ohms");
 
-			Serial.print("Ra E24: ");
-			Serial.print( resistorValue( TRmaths(ADCtoMV(read1.getAverage())) ) );
-			Serial.println(" Ohms");
+			Serial2.print("Ra E24: ");
+			Serial2.print( resistorValue( TRmaths(ADCtoMV(read1.getAverage())) ) );
+			Serial2.println(" Ohms");
 
-			Serial.print("Reading 2: ");
-			Serial.print(ADCtoMV(read2.getAverage()));
-			Serial.println("mV");
+			Serial2.print("Reading 2: ");
+			Serial2.print(ADCtoMV(read2.getAverage()));
+			Serial2.println("mV");
 
-			Serial.print("Rb: ");
-			Serial.print( TRmaths(ADCtoMV(read2.getAverage())) );
-			Serial.println(" Ohms");
+			Serial2.print("Rb: ");
+			Serial2.print( TRmaths(ADCtoMV(read2.getAverage())) );
+			Serial2.println(" Ohms");
 
-			Serial.print("Rb E24: ");
-			Serial.print( resistorValue( TRmaths(ADCtoMV(read2.getAverage() ) ) ) );
-			Serial.println(" Ohms");
+			Serial2.print("Rb E24: ");
+			Serial2.print( resistorValue( TRmaths(ADCtoMV(read2.getAverage() ) ) ) );
+			Serial2.println(" Ohms");
 			#endif
 			returnValue( resistorValue(TRmaths(ADCtoMV(read1.getAverage()))), 6);
 			returnValue( resistorValue(TRmaths(ADCtoMV(read2.getAverage()))), 6);
+			#if MEASUREMENT_RETURN
 			returnValue( TRmaths(ADCtoMV(read1.getAverage())), 6);
 			returnValue( TRmaths(ADCtoMV(read2.getAverage())), 6);
+			#endif
 		}
 		break;
 
@@ -301,47 +321,49 @@ void Target::analyse(char target, int direction){
 				delay(50);
 
 			#if TARGET_DEBUG
-				Serial.println(i);
+				Serial2.println(i);
 			#endif
 			}
 
 			#if TARGET_DEBUG
-			Serial.print("Ref 1: ");
-			Serial.print(ADCtoMV(ref1.getAverage()));
-			Serial.println("mV");
+			Serial2.print("Ref 1: ");
+			Serial2.print(ADCtoMV(ref1.getAverage()));
+			Serial2.println("mV");
 
-			Serial.print("Reading 1: ");
-			Serial.print(ADCtoMV(read1.getAverage()));
-			Serial.println("mV");
+			Serial2.print("Reading 1: ");
+			Serial2.print(ADCtoMV(read1.getAverage()));
+			Serial2.println("mV");
 
-			Serial.print("Ra: ");
-			Serial.print( T3maths(ADCtoMV(read1.getAverage()), ADCtoMV(ref1.getAverage()) ) );
-			Serial.println(" Ohms");
+			Serial2.print("Ra: ");
+			Serial2.print( T3maths(ADCtoMV(read1.getAverage()), ADCtoMV(ref1.getAverage()) ) );
+			Serial2.println(" Ohms");
 
-			Serial.print("Ra E24: ");
-			Serial.print( resistorValue( T3maths(ADCtoMV(read1.getAverage()),ADCtoMV(ref1.getAverage())) ) );
-			Serial.println(" Ohms");
+			Serial2.print("Ra E24: ");
+			Serial2.print( resistorValue( T3maths(ADCtoMV(read1.getAverage()),ADCtoMV(ref1.getAverage())) ) );
+			Serial2.println(" Ohms");
 
-			Serial.print("Ref 2: ");
-			Serial.print(ADCtoMV(ref2.getAverage()));
-			Serial.println("mV");
+			Serial2.print("Ref 2: ");
+			Serial2.print(ADCtoMV(ref2.getAverage()));
+			Serial2.println("mV");
 
-			Serial.print("Reading 2: ");
-			Serial.print(ADCtoMV(read2.getAverage()));
-			Serial.println("mV");
+			Serial2.print("Reading 2: ");
+			Serial2.print(ADCtoMV(read2.getAverage()));
+			Serial2.println("mV");
 
-			Serial.print("Rb: ");
-			Serial.print( T3maths(ADCtoMV(read2.getAverage()),ADCtoMV(ref2.getAverage())) );
-			Serial.println(" Ohms");
+			Serial2.print("Rb: ");
+			Serial2.print( T3maths(ADCtoMV(read2.getAverage()),ADCtoMV(ref2.getAverage())) );
+			Serial2.println(" Ohms");
 
-			Serial.print("Rb E24: ");
-			Serial.print( resistorValue( T3maths(ADCtoMV(read2.getAverage()),ADCtoMV(ref2.getAverage())) ) );
-			Serial.println(" Ohms");
+			Serial2.print("Rb E24: ");
+			Serial2.print( resistorValue( T3maths(ADCtoMV(read2.getAverage()),ADCtoMV(ref2.getAverage())) ) );
+			Serial2.println(" Ohms");
 			#endif
 			returnValue( resistorValue( T3maths( ADCtoMV( read1.getAverage() ) , ADCtoMV( ref1.getAverage() ) ) ), 6);
 			returnValue( resistorValue( T3maths( ADCtoMV( read2.getAverage() ) , ADCtoMV( ref2.getAverage() ) ) ), 6);
+			#if MEASUREMENT_RETURN
 			returnValue( T3maths( ADCtoMV( read1.getAverage() ) , ADCtoMV( ref1.getAverage() ) ), 6);
 			returnValue( T3maths( ADCtoMV( read2.getAverage() ) , ADCtoMV( ref2.getAverage() ) ), 6);
+			#endif
 		}
 		else {
 			flushBuffers();
@@ -384,47 +406,49 @@ void Target::analyse(char target, int direction){
 				delay(50);
 
 			#if TARGET_DEBUG
-				Serial.println(i);
+				Serial2.println(i);
 			#endif
 			}
 
 			#if TARGET_DEBUG
-			Serial.print("Ref 1: ");
-			Serial.print(ADCtoMV(ref1.getAverage()));
-			Serial.println("mV");
+			Serial2.print("Ref 1: ");
+			Serial2.print(ADCtoMV(ref1.getAverage()));
+			Serial2.println("mV");
 
-			Serial.print("Reading 1: ");
-			Serial.print(ADCtoMV(read1.getAverage()));
-			Serial.println("mV");
+			Serial2.print("Reading 1: ");
+			Serial2.print(ADCtoMV(read1.getAverage()));
+			Serial2.println("mV");
 
-			Serial.print("Ra: ");
-			Serial.print( T3maths(ADCtoMV(read1.getAverage()), ADCtoMV(ref1.getAverage()) ) );
-			Serial.println(" Ohms");
+			Serial2.print("Ra: ");
+			Serial2.print( T3maths(ADCtoMV(read1.getAverage()), ADCtoMV(ref1.getAverage()) ) );
+			Serial2.println(" Ohms");
 
-			Serial.print("Ra E24: ");
-			Serial.print( resistorValue( T3maths(ADCtoMV(read1.getAverage()),ADCtoMV(ref1.getAverage())) ) );
-			Serial.println(" Ohms");
+			Serial2.print("Ra E24: ");
+			Serial2.print( resistorValue( T3maths(ADCtoMV(read1.getAverage()),ADCtoMV(ref1.getAverage())) ) );
+			Serial2.println(" Ohms");
 
-			Serial.print("Ref 2: ");
-			Serial.print(ADCtoMV(ref2.getAverage()));
-			Serial.println("mV");
+			Serial2.print("Ref 2: ");
+			Serial2.print(ADCtoMV(ref2.getAverage()));
+			Serial2.println("mV");
 
-			Serial.print("Reading 2: ");
-			Serial.print(ADCtoMV(read2.getAverage()));
-			Serial.println("mV");
+			Serial2.print("Reading 2: ");
+			Serial2.print(ADCtoMV(read2.getAverage()));
+			Serial2.println("mV");
 
-			Serial.print("Rb: ");
-			Serial.print( T3maths(ADCtoMV(read2.getAverage()),ADCtoMV(ref2.getAverage())) );
-			Serial.println(" Ohms");
+			Serial2.print("Rb: ");
+			Serial2.print( T3maths(ADCtoMV(read2.getAverage()),ADCtoMV(ref2.getAverage())) );
+			Serial2.println(" Ohms");
 
-			Serial.print("Rb E24: ");
-			Serial.print( resistorValue( T3maths(ADCtoMV(read2.getAverage()),ADCtoMV(ref2.getAverage())) ) );
-			Serial.println(" Ohms");
+			Serial2.print("Rb E24: ");
+			Serial2.print( resistorValue( T3maths(ADCtoMV(read2.getAverage()),ADCtoMV(ref2.getAverage())) ) );
+			Serial2.println(" Ohms");
 			#endif
 			returnValue( resistorValue( T3maths( ADCtoMV( read1.getAverage() ) , ADCtoMV( ref1.getAverage() ) ) ), 6);
 			returnValue( resistorValue( T3maths( ADCtoMV( read2.getAverage() ) , ADCtoMV( ref2.getAverage() ) ) ), 6);
+			#if MEASUREMENT_RETURN
 			returnValue( T3maths( ADCtoMV( read1.getAverage() ) , ADCtoMV( ref1.getAverage() ) ), 6);
 			returnValue( T3maths( ADCtoMV( read2.getAverage() ) , ADCtoMV( ref2.getAverage() ) ), 6);
+			#endif
 		}
 		break;
 
@@ -440,7 +464,7 @@ void Target::analyse(char target, int direction){
 				// P1->10v[R2 - 1K] + ADC GND->GND[low Z] P2->OPEN
 				GPIOon(B00001100,B01010001);
 				delay(50);
-				read1.addValue(analogRead(2) + 17);
+				read1.addValue(analogRead(2) + 19);
 				GPIOoff(B00000000,B00000000);
 				delay(50);
 
@@ -448,44 +472,76 @@ void Target::analyse(char target, int direction){
 				//P1->OPEN GND->GND[low Z] P2->10v[R2 - 1K] + ADC
 				GPIOon(B00100001,B01010001);
 				delay(50);
-				read2.addValue(analogRead(2) + 17);
+				read2.addValue(analogRead(2) + 18);
 				GPIOoff(B00000000,B00000000);
 				delay(50);
 
 			#if TARGET_DEBUG
-				Serial.println(i);
+				Serial2.println(i);
 			#endif
 			}
 
-			#if TARGTE_DEBUG
-			Serial.print("Reading 1: ");
-			Serial.print(ADCtoMV(read1.getAverage()));
-			Serial.println("mV");
+			#if LAPTOP_CONTROL
+				#if TARGET_DEBUG
+				Serial.print("Reading 1: ");
+				Serial.print(ADCtoMV(read1.getAverage()));
+				Serial.println("mV");
 
-			Serial.print("Ra: ");
-			Serial.print( T4maths(ADCtoMV(read1.getAverage())) );
-			Serial.println(" Ohms");
+				Serial.print("Ra: ");
+				Serial.print( T4maths(ADCtoMV(read1.getAverage())) );
+				Serial.println(" Ohms");
 
-			Serial.print("Ra E24: ");
-			Serial.print( resistorValue( T4maths(ADCtoMV(read1.getAverage())) ) );
-			Serial.println(" Ohms");
+				Serial.print("Ra E24: ");
+				Serial.print( resistorValue( T4maths(ADCtoMV(read1.getAverage())) ) );
+				Serial.println(" Ohms");
 
-			Serial.print("Reading 2: ");
-			Serial.print(ADCtoMV(read2.getAverage()));
-			Serial.println("mV");
+				Serial.print("Reading 2: ");
+				Serial.print(ADCtoMV(read2.getAverage()));
+				Serial.println("mV");
 
-			Serial.print("Rb: ");
-			Serial.print( T4maths( ADCtoMV(read2.getAverage()) ) );
-			Serial.println("Ohms");
+				Serial.print("Rb: ");
+				Serial.print( T4maths( ADCtoMV(read2.getAverage()) ) );
+				Serial.println("Ohms");
 
-			Serial.print("Rb E24: ");
-			Serial.print( resistorValue( T4maths(ADCtoMV(read2.getAverage())) ) );
-			Serial.println(" Ohms");
+				Serial.print("Rb E24: ");
+				Serial.print( resistorValue( T4maths(ADCtoMV(read2.getAverage())) ) );
+				Serial.println(" Ohms");
+				#endif
+			#else
+				#if TARGET_DEBUG
+				Serial2.print("Reading 1: ");
+				Serial2.print(ADCtoMV(read1.getAverage()));
+				Serial2.println("mV");
+
+				Serial2.print("Ra: ");
+				Serial2.print( T4maths(ADCtoMV(read1.getAverage())) );
+				Serial2.println(" Ohms");
+
+				Serial2.print("Ra E24: ");
+				Serial2.print( resistorValue( T4maths(ADCtoMV(read1.getAverage())) ) );
+				Serial2.println(" Ohms");
+
+				Serial2.print("Reading 2: ");
+				Serial2.print(ADCtoMV(read2.getAverage()));
+				Serial2.println("mV");
+
+				Serial2.print("Rb: ");
+				Serial2.print( T4maths( ADCtoMV(read2.getAverage()) ) );
+				Serial2.println("Ohms");
+
+				Serial2.print("Rb E24: ");
+				Serial2.print( resistorValue( T4maths(ADCtoMV(read2.getAverage())) ) );
+				Serial2.println(" Ohms");
+				#endif
 			#endif
+
 			returnValue( resistorValue(T4maths(ADCtoMV(read1.getAverage()))), 6);
 			returnValue( resistorValue(T4maths(ADCtoMV(read2.getAverage()))), 6);
+
+			#if MEASUREMENT_RETURN
 			returnValue( T4maths(ADCtoMV(read1.getAverage())), 6);
 			returnValue( T4maths(ADCtoMV(read2.getAverage())), 6);
+			#endif
 		}
 		else {
 			flushBuffers();
@@ -495,7 +551,7 @@ void Target::analyse(char target, int direction){
 				// P1->10v[R2 - 1K] + ADC GND->GND[low Z] P2->OPEN
 				GPIOon(B00001100,B01010101);
 				delay(50);
-				read1.addValue(analogRead(2) + 17);
+				read1.addValue(analogRead(2) + 19);
 				GPIOoff(B00000000,B00000000);
 				delay(50);
 
@@ -503,44 +559,76 @@ void Target::analyse(char target, int direction){
 				//P1->OPEN GND->GND[low Z] P2->10v[R2 - 1K] + ADC
 				GPIOon(B00100001,B01010101);
 				delay(50);
-				read2.addValue(analogRead(2) + 17);
+				read2.addValue(analogRead(2) + 18);
 				GPIOoff(B00000000,B00000000);
 				delay(50);
 
 			#if TARGET_DEBUG
-				Serial.println(i);
+				Serial2.println(i);
 			#endif
 			}
 
-			#if TARGTE_DEBUG
-			Serial.print("Reading 1: ");
-			Serial.print(ADCtoMV(read1.getAverage()));
-			Serial.println("mV");
+			#if LAPTOP_CONTROL
+				#if TARGET_DEBUG
+				Serial.print("Reading 1: ");
+				Serial.print(ADCtoMV(read1.getAverage()));
+				Serial.println("mV");
 
-			Serial.print("Ra: ");
-			Serial.print( T4maths(ADCtoMV(read1.getAverage())) );
-			Serial.println(" Ohms");
+				Serial.print("Ra: ");
+				Serial.print( T4maths(ADCtoMV(read1.getAverage())) );
+				Serial.println(" Ohms");
 
-			Serial.print("Ra E24: ");
-			Serial.print( resistorValue( T4maths(ADCtoMV(read1.getAverage())) ) );
-			Serial.println(" Ohms");
+				Serial.print("Ra E24: ");
+				Serial.print( resistorValue( T4maths(ADCtoMV(read1.getAverage())) ) );
+				Serial.println(" Ohms");
 
-			Serial.print("Reading 2: ");
-			Serial.print(ADCtoMV(read2.getAverage()));
-			Serial.println("mV");
+				Serial.print("Reading 2: ");
+				Serial.print(ADCtoMV(read2.getAverage()));
+				Serial.println("mV");
 
-			Serial.print("Rb: ");
-			Serial.print( T4maths( ADCtoMV(read2.getAverage()) ) );
-			Serial.println("Ohms");
+				Serial.print("Rb: ");
+				Serial.print( T4maths( ADCtoMV(read2.getAverage()) ) );
+				Serial.println("Ohms");
 
-			Serial.print("Rb E24: ");
-			Serial.print( resistorValue( T4maths(ADCtoMV(read2.getAverage())) ) );
-			Serial.println(" Ohms");
+				Serial.print("Rb E24: ");
+				Serial.print( resistorValue( T4maths(ADCtoMV(read2.getAverage())) ) );
+				Serial.println(" Ohms");
+				#endif
+			#else
+				#if TARGET_DEBUG
+				Serial2.print("Reading 1: ");
+				Serial2.print(ADCtoMV(read1.getAverage()));
+				Serial2.println("mV");
+
+				Serial2.print("Ra: ");
+				Serial2.print( T4maths(ADCtoMV(read1.getAverage())) );
+				Serial2.println(" Ohms");
+
+				Serial2.print("Ra E24: ");
+				Serial2.print( resistorValue( T4maths(ADCtoMV(read1.getAverage())) ) );
+				Serial2.println(" Ohms");
+
+				Serial2.print("Reading 2: ");
+				Serial2.print(ADCtoMV(read2.getAverage()));
+				Serial2.println("mV");
+
+				Serial2.print("Rb: ");
+				Serial2.print( T4maths( ADCtoMV(read2.getAverage()) ) );
+				Serial2.println("Ohms");
+
+				Serial2.print("Rb E24: ");
+				Serial2.print( resistorValue( T4maths(ADCtoMV(read2.getAverage())) ) );
+				Serial2.println(" Ohms");
+				#endif
 			#endif
+
 			returnValue( resistorValue(T4maths(ADCtoMV(read1.getAverage()))), 6);
 			returnValue( resistorValue(T4maths(ADCtoMV(read2.getAverage()))), 6);
+
+			#if MEASUREMENT_RETURN
 			returnValue( T4maths(ADCtoMV(read1.getAverage())), 6);
 			returnValue( T4maths(ADCtoMV(read2.getAverage())), 6);
+			#endif
 		}
 		break;
 
@@ -557,7 +645,7 @@ void Target::analyse(char target, int direction){
 
 				// P1->OPEN GND->GND[low Z] p2->10v[R2 - 1K] + ADC
 				GPIOon(B00001001,B01010001);
-				delay(100);
+				delay(50);
 				read1.addValue(analogRead(2) + 15);
 				GPIOoff(B00000000,B00000000);
 				delay(50);
@@ -595,129 +683,132 @@ void Target::analyse(char target, int direction){
 				delay(50);
 
 				#if TARGET_DEBUG
-				Serial.println(i);
+				Serial2.println(i);
 				#endif
 			}
 
 			#if TARGET_DEBUG
-			Serial.print("Reading 1: ");
-			Serial.print(ADCtoMV(read1.getAverage()));
-			Serial.println("mV");
+			Serial2.print("Reading 1: ");
+			Serial2.print(ADCtoMV(read1.getAverage()));
+			Serial2.println("mV");
 
-			Serial.print("R: ");
-			Serial.print( TRmaths( ADCtoMV(read1.getAverage()) ) );
-			Serial.println("Ohms");
+			Serial2.print("R: ");
+			Serial2.print( TRmaths( ADCtoMV(read1.getAverage()) ) );
+			Serial2.println("Ohms");
 
-			Serial.print("R E24: ");
-			Serial.print( resistorValue( TRmaths(ADCtoMV(read1.getAverage())) ) );
-			Serial.println(" Ohms");
+			Serial2.print("R E24: ");
+			Serial2.print( resistorValue( TRmaths(ADCtoMV(read1.getAverage())) ) );
+			Serial2.println(" Ohms");
 
-			Serial.print("C Actual V: ");
-			Serial.print(ADCtoMV(ref2.getAverage()));
-			Serial.println("mV");
+			Serial2.print("C Actual V: ");
+			Serial2.print(ADCtoMV(ref2.getAverage()));
+			Serial2.println("mV");
 
-			Serial.print("Charge time: ");
-			Serial.print(read2.getAverage());
-			Serial.println("uS");
+			Serial2.print("Charge time: ");
+			Serial2.print(read2.getAverage());
+			Serial2.println("uS");
 
-			Serial.print("C: ");
-			Serial.print( TCmaths(read2.getAverage()) );
-			Serial.println(" nF");
+			Serial2.print("C: ");
+			Serial2.print( TCmaths(read2.getAverage()) );
+			Serial2.println(" nF");
 
-			Serial.print("C E12: ");
-			Serial.print( capValue( TCmaths(read2.getAverage()) ) );
-			Serial.println(" nF");
+			Serial2.print("C E12: ");
+			Serial2.print( capValue( TCmaths(read2.getAverage()) ) );
+			Serial2.println(" nF");
 			#endif
+			#if MEASUREMENT_RETURN
 			returnValue( TCmaths(read2.getAverage()), 6);
 			returnValue( TRmaths(ADCtoMV(read1.getAverage())), 6);
+			#endif
 			returnValue( capValue(TCmaths(read2.getAverage())), 6);
 			returnValue( resistorValue(TRmaths(ADCtoMV(read1.getAverage()))), 6);
 		}
 		else {
-			if (direction == 0) {
-				long temp = 0;
+			long temp = 0;
 
-				//-> measure resistance
-				flushBuffers();
-				for(int i=1 ; i<=bufferSize ;i++) {
+			//-> measure resistance
+			flushBuffers();
+			for(int i=1 ; i<=bufferSize ;i++) {
 
-					// P1->OPEN GND->GND[low Z] p2->10v[R2 - 1K] + ADC
-					GPIOon(B00001001,B01010101);
-					delay(100);
-					read1.addValue(analogRead(2) + 15);
-					GPIOoff(B00000000,B00000000);
-					delay(50);
+				// P1->OPEN GND->GND[low Z] p2->10v[R2 - 1K] + ADC
+				GPIOon(B00001001,B01010101);
+				delay(50);
+				read1.addValue(analogRead(2) + 15);
+				GPIOoff(B00000000,B00000000);
+				delay(50);
 
 
-					//-> discharge capacitor
-					// P1->GND[low Z] GND->GND[low Z] P2->GND[low Z]
-					GPIOon(B01000000,B01000111);
-					delay(100);
-					GPIOoff(B00000000,B00000000);
-					delay(50);
+				//-> discharge capacitor
+				// P1->GND[low Z] GND->GND[low Z] P2->GND[low Z]
+				GPIOon(B01000000,B01000111);
+				delay(100);
+				GPIOoff(B00000000,B00000000);
+				delay(50);
 
-					// -> charge capacitor via 10v[R4 - 3M3] and start timer
-					// P1->10v[R4 - 1M] + ADC GND->OPEN P2->GND[low Z]
-					GPIOon(B01100100,B01000100);
-					timer.start();
+				// -> charge capacitor via 10v[R4 - 3M3] and start timer
+				// P1->10v[R4 - 1M] + ADC GND->OPEN P2->GND[low Z]
+				GPIOon(B01100100,B01000100);
+				timer.start();
 
-					// -> time taken to reach 63% of 10v [6.3V - 645]
-					while(temp <= 645){
-						temp = analogRead(2);
-					}
-
-					timer.stop();
-					read2.addValue(timer.elapsed());
-					ref2.addValue(temp);
-
-					timer.reset();
-					temp = 0;
-
-					//-> discharge capacitor
-					// P1->GND[low Z] GND->GND[low Z] P2->GND[low Z]
-					GPIOon(B01000000,B01000111);
-					delay(200);
-					GPIOoff(B00000000,B00000000);
-					delay(50);
-
-					#if TARGET_DEBUG
-					Serial.println(i);
-					#endif
+				// -> time taken to reach 63% of 10v [6.3V - 645]
+				while(temp <= 645){
+					temp = analogRead(2);
 				}
 
+				timer.stop();
+				read2.addValue(timer.elapsed());
+				ref2.addValue(temp);
+
+				timer.reset();
+				temp = 0;
+
+				//-> discharge capacitor
+				// P1->GND[low Z] GND->GND[low Z] P2->GND[low Z]
+				GPIOon(B01000000,B01000111);
+				delay(200);
+				GPIOoff(B00000000,B00000000);
+				delay(50);
+
 				#if TARGET_DEBUG
-				Serial.print("Reading 1: ");
-				Serial.print(ADCtoMV(read1.getAverage()));
-				Serial.println("mV");
-
-				Serial.print("R: ");
-				Serial.print( TRmaths( ADCtoMV(read1.getAverage()) ) );
-				Serial.println("Ohms");
-
-				Serial.print("R E24: ");
-				Serial.print( resistorValue( TRmaths(ADCtoMV(read1.getAverage())) ) );
-				Serial.println(" Ohms");
-
-				Serial.print("C Actual V: ");
-				Serial.print(ADCtoMV(ref2.getAverage()));
-				Serial.println("mV");
-
-				Serial.print("Charge time: ");
-				Serial.print(read2.getAverage());
-				Serial.println("uS");
-
-				Serial.print("C: ");
-				Serial.print( TCmaths(read2.getAverage()) );
-				Serial.println(" nF");
-
-				Serial.print("C E12: ");
-				Serial.print( capValue( TCmaths(read2.getAverage()) ) );
-				Serial.println(" nF");
+				Serial2.println(i);
 				#endif
-				returnValue( TCmaths(read2.getAverage()), 6);
-				returnValue( TRmaths(ADCtoMV(read1.getAverage())), 6);
-				returnValue( capValue(TCmaths(read2.getAverage())), 6);
-				returnValue( resistorValue(TRmaths(ADCtoMV(read1.getAverage()))), 6);
+				}
+
+			#if TARGET_DEBUG
+			Serial2.print("Reading 1: ");
+			Serial2.print(ADCtoMV(read1.getAverage()));
+			Serial2.println("mV");
+
+			Serial2.print("R: ");
+			Serial2.print( TRmaths( ADCtoMV(read1.getAverage()) ) );
+			Serial2.println("Ohms");
+
+			Serial2.print("R E24: ");
+			Serial2.print( resistorValue( TRmaths(ADCtoMV(read1.getAverage())) ) );
+			Serial2.println(" Ohms");
+
+			Serial2.print("C Actual V: ");
+			Serial2.print(ADCtoMV(ref2.getAverage()));
+			Serial2.println("mV");
+
+			Serial2.print("Charge time: ");
+			Serial2.print(read2.getAverage());
+			Serial2.println("uS");
+
+			Serial2.print("C: ");
+			Serial2.print( TCmaths(read2.getAverage()) );
+			Serial2.println(" nF");
+
+			Serial2.print("C E12: ");
+			Serial2.print( capValue( TCmaths(read2.getAverage()) ) );
+			Serial2.println(" nF");
+			#endif
+			#if MEASUREMENT_RETURN
+			returnValue( TCmaths(read2.getAverage()), 6);
+			returnValue( TRmaths(ADCtoMV(read1.getAverage())), 6);
+			#endif
+			returnValue( capValue(TCmaths(read2.getAverage())), 6);
+			returnValue( resistorValue(TRmaths(ADCtoMV(read1.getAverage()))), 6);
 			}
 			break;
 
@@ -733,7 +824,7 @@ void Target::analyse(char target, int direction){
 				//-> measure resistance
 				// P1->10v[R2 - 1K] + ADC GND->OPEN p2->GND[low Z]
 				GPIOon(B01100100,B01010000);
-				delay(100);
+				delay(50);
 				read1.addValue(analogRead(2)+17);
 				GPIOoff(B00000000,B00000000);
 				delay(50);
@@ -771,42 +862,45 @@ void Target::analyse(char target, int direction){
 				delay(50);
 
 				#if TARGET_DEBUG
-				Serial.println(i);
+				Serial2.println(i);
 				#endif
 
 			}
 
 			#if TARGET_DEBUG
-			Serial.print("Reading 1: ");
-			Serial.print(ADCtoMV(read1.getAverage()));
-			Serial.println("mV");
+			Serial2.print("Reading 1: ");
+			Serial2.print(ADCtoMV(read1.getAverage()));
+			Serial2.println("mV");
 
-			Serial.print("R: ");
-			Serial.print( TRmaths( ADCtoMV(read1.getAverage()) ) );
-			Serial.println("Ohms");
+			Serial2.print("R: ");
+			Serial2.print( TRmaths( ADCtoMV(read1.getAverage()) ) );
+			Serial2.println("Ohms");
 
-			Serial.print("R E24: ");
-			Serial.print( resistorValue( TRmaths(ADCtoMV(read1.getAverage())) ) );
-			Serial.println(" Ohms");
+			Serial2.print("R E24: ");
+			Serial2.print( resistorValue( TRmaths(ADCtoMV(read1.getAverage())) ) );
+			Serial2.println(" Ohms");
 
-			Serial.print("C Actual V: ");
-			Serial.print(ADCtoMV(ref2.getAverage()));
-			Serial.println("mV");
+			Serial2.print("C Actual V: ");
+			Serial2.print(ADCtoMV(ref2.getAverage()));
+			Serial2.println("mV");
 
-			Serial.print("Charge time: ");
-			Serial.print(read2.getAverage());
-			Serial.println("uS");
+			Serial2.print("Charge time: ");
+			Serial2.print(read2.getAverage());
+			Serial2.println("uS");
 
-			Serial.print("C: ");
-			Serial.print( TCmaths(read2.getAverage())*0.967 );
-			Serial.println(" nF");
+			Serial2.print("C: ");
+			Serial2.print( TCmaths(read2.getAverage())*0.967 );
+			Serial2.println(" nF");
 
-			Serial.print("C E12: ");
-			Serial.print( capValue( TCmaths(read2.getAverage())*0.967 ) );
-			Serial.println(" nF");
+			Serial2.print("C E12: ");
+			Serial2.print( capValue( TCmaths(read2.getAverage())*0.967 ) );
+			Serial2.println(" nF");
 			#endif
+
+			#if MEASUREMENT_RETURN
 			returnValue( TCmaths(read2.getAverage())*0.967, 6);
 			returnValue( TRmaths(ADCtoMV(read1.getAverage())), 6);
+			#endif
 			returnValue( capValue(TCmaths(read2.getAverage())*0.967), 6);
 			returnValue( resistorValue(TRmaths(ADCtoMV(read1.getAverage()))), 6);
 		}
@@ -818,7 +912,7 @@ void Target::analyse(char target, int direction){
 				//-> measure resistance
 				// P1->10v[R2 - 1K] + ADC GND->OPEN p2->GND[low Z]
 				GPIOon(B01100100,B01010100);
-				delay(100);
+				delay(50);
 				read1.addValue(analogRead(2)+17);
 				GPIOoff(B00000000,B00000000);
 				delay(50);
@@ -856,41 +950,44 @@ void Target::analyse(char target, int direction){
 				delay(50);
 
 			#if TARGET_DEBUG
-				Serial.println(i);
+				Serial2.println(i);
 			#endif
 			}
 
 			#if TARGET_DEBUG
-			Serial.print("Reading 1: ");
-			Serial.print(ADCtoMV(read1.getAverage()));
-			Serial.println("mV");
+			Serial2.print("Reading 1: ");
+			Serial2.print(ADCtoMV(read1.getAverage()));
+			Serial2.println("mV");
 
-			Serial.print("R: ");
-			Serial.print( TRmaths( ADCtoMV(read1.getAverage()) ) );
-			Serial.println("Ohms");
+			Serial2.print("R: ");
+			Serial2.print( TRmaths( ADCtoMV(read1.getAverage()) ) );
+			Serial2.println("Ohms");
 
-			Serial.print("R E24: ");
-			Serial.print( resistorValue( TRmaths(ADCtoMV(read1.getAverage())) ) );
-			Serial.println(" Ohms");
+			Serial2.print("R E24: ");
+			Serial2.print( resistorValue( TRmaths(ADCtoMV(read1.getAverage())) ) );
+			Serial2.println(" Ohms");
 
-			Serial.print("C Actual V: ");
-			Serial.print(ADCtoMV(ref2.getAverage()));
-			Serial.println("mV");
+			Serial2.print("C Actual V: ");
+			Serial2.print(ADCtoMV(ref2.getAverage()));
+			Serial2.println("mV");
 
-			Serial.print("Charge time: ");
-			Serial.print(read2.getAverage());
-			Serial.println("uS");
+			Serial2.print("Charge time: ");
+			Serial2.print(read2.getAverage());
+			Serial2.println("uS");
 
-			Serial.print("C: ");
-			Serial.print( TCmaths(read2.getAverage())*0.967 );
-			Serial.println(" nF");
+			Serial2.print("C: ");
+			Serial2.print( TCmaths(read2.getAverage())*0.967 );
+			Serial2.println(" nF");
 
-			Serial.print("C E12: ");
-			Serial.print( capValue( TCmaths(read2.getAverage())*0.967 ) );
-			Serial.println(" nF");
+			Serial2.print("C E12: ");
+			Serial2.print( capValue( TCmaths(read2.getAverage())*0.967 ) );
+			Serial2.println(" nF");
 			#endif
+
+			#if MEASUREMENT_RETURN
 			returnValue( TCmaths(read2.getAverage())*0.967, 6);
 			returnValue( TRmaths(ADCtoMV(read1.getAverage())), 6);
+			#endif
 			returnValue( capValue(TCmaths(read2.getAverage())*0.967), 6);
 			returnValue( resistorValue(TRmaths(ADCtoMV(read1.getAverage()))), 6);
 		}
@@ -909,7 +1006,7 @@ void Target::analyse(char target, int direction){
 				//-> measure resistance
 				// P1->OPEN GND->GND[low Z] p2->10v[R1 - 80R] + ADC
 				GPIOon(B00001001,B01100001);
-				delay(100);
+				delay(50);
 				read1.addValue(analogRead(2)+15);
 				GPIOoff(B00000000,B00000000);
 				delay(50);
@@ -946,41 +1043,44 @@ void Target::analyse(char target, int direction){
 				delay(50);
 
 			#if TARGET_DEBUG
-				Serial.println(i);
+				Serial2.println(i);
 			#endif
 
 			}
 			#if TARGET_DEBUG
-			Serial.print("Reading 1: ");
-			Serial.print(ADCtoMV(read1.getAverage()));
-			Serial.println("mV");
+			Serial2.print("Reading 1: ");
+			Serial2.print(ADCtoMV(read1.getAverage()));
+			Serial2.println("mV");
 
-			Serial.print("R: ");
-			Serial.print( T7Rmaths( ADCtoMV(read1.getAverage()) ) );
-			Serial.println("Ohms");
+			Serial2.print("R: ");
+			Serial2.print( T7Rmaths( ADCtoMV(read1.getAverage()) ) );
+			Serial2.println("Ohms");
 
-			Serial.print("R E24: ");
-			Serial.print( resistorValue( T7Rmaths(ADCtoMV(read1.getAverage())) ) );
-			Serial.println(" Ohms");
+			Serial2.print("R E24: ");
+			Serial2.print( resistorValue( T7Rmaths(ADCtoMV(read1.getAverage())) ) );
+			Serial2.println(" Ohms");
 
-			Serial.print("C Actual V: ");
-			Serial.print(ADCtoMV(ref2.getAverage()));
-			Serial.println("mV");
+			Serial2.print("C Actual V: ");
+			Serial2.print(ADCtoMV(ref2.getAverage()));
+			Serial2.println("mV");
 
-			Serial.print("Charge time: ");
-			Serial.print(read2.getAverage());
-			Serial.println("uS");
+			Serial2.print("Charge time: ");
+			Serial2.print(read2.getAverage());
+			Serial2.println("uS");
 
-			Serial.print("C: ");
-			Serial.print( TCmaths(read2.getAverage()) );
-			Serial.println(" nF");
+			Serial2.print("C: ");
+			Serial2.print( TCmaths(read2.getAverage()) );
+			Serial2.println(" nF");
 
-			Serial.print("C E12: ");
-			Serial.print( capValue( TCmaths(read2.getAverage()) ) );
-			Serial.println(" nF");
+			Serial2.print("C E12: ");
+			Serial2.print( capValue( TCmaths(read2.getAverage()) ) );
+			Serial2.println(" nF");
 			#endif
+
+			#if MEASUREMENT_RETURN
 			returnValue( TCmaths(read2.getAverage()), 6);
 			returnValue( T7Rmaths(ADCtoMV(read1.getAverage())), 6);
+			#endif
 			returnValue( capValue(TCmaths(read2.getAverage())), 6);
 			returnValue( resistorValue(T7Rmaths(ADCtoMV(read1.getAverage()))), 6);
 		}
@@ -992,7 +1092,7 @@ void Target::analyse(char target, int direction){
 				//-> measure resistance
 				// P1->OPEN GND->GND[low Z] p2->10v[R1 - 80R] + ADC
 				GPIOon(B00001001,B01100001);
-				delay(100);
+				delay(50);
 				read1.addValue(analogRead(2)+15);
 				GPIOoff(B00000000,B00000000);
 				delay(50);
@@ -1029,40 +1129,43 @@ void Target::analyse(char target, int direction){
 				delay(50);
 
 				#if TARGET_DEBUG
-				Serial.println(i);
+				Serial2.println(i);
 				#endif
 			}
-#if TARGET_DEBUG
-			Serial.print("Reading 1: ");
-			Serial.print(ADCtoMV(read1.getAverage()));
-			Serial.println("mV");
+			#if TARGET_DEBUG
+			Serial2.print("Reading 1: ");
+			Serial2.print(ADCtoMV(read1.getAverage()));
+			Serial2.println("mV");
 
-			Serial.print("R: ");
-			Serial.print( T7Rmaths( ADCtoMV(read1.getAverage()) ) );
-			Serial.println("Ohms");
+			Serial2.print("R: ");
+			Serial2.print( T7Rmaths( ADCtoMV(read1.getAverage()) ) );
+			Serial2.println("Ohms");
 
-			Serial.print("R E24: ");
-			Serial.print( resistorValue( T7Rmaths(ADCtoMV(read1.getAverage())) ) );
-			Serial.println(" Ohms");
+			Serial2.print("R E24: ");
+			Serial2.print( resistorValue( T7Rmaths(ADCtoMV(read1.getAverage())) ) );
+			Serial2.println(" Ohms");
 
-			Serial.print("C Actual V: ");
-			Serial.print(ADCtoMV(ref2.getAverage()));
-			Serial.println("mV");
+			Serial2.print("C Actual V: ");
+			Serial2.print(ADCtoMV(ref2.getAverage()));
+			Serial2.println("mV");
 
-			Serial.print("Charge time: ");
-			Serial.print(read2.getAverage());
-			Serial.println("uS");
+			Serial2.print("Charge time: ");
+			Serial2.print(read2.getAverage());
+			Serial2.println("uS");
 
-			Serial.print("C: ");
-			Serial.print( TCmaths(read2.getAverage()) );
-			Serial.println(" nF");
+			Serial2.print("C: ");
+			Serial2.print( TCmaths(read2.getAverage()) );
+			Serial2.println(" nF");
 
-			Serial.print("C E12: ");
-			Serial.print( capValue( TCmaths(read2.getAverage()) ) );
-			Serial.println(" nF");
-#endif
+			Serial2.print("C E12: ");
+			Serial2.print( capValue( TCmaths(read2.getAverage()) ) );
+			Serial2.println(" nF");
+			#endif
+
+			#if MEASUREMENT_RETURN
 			returnValue( TCmaths(read2.getAverage()), 6);
 			returnValue( T7Rmaths(ADCtoMV(read1.getAverage())), 6);
+			#endif
 			returnValue( capValue(TCmaths(read2.getAverage())), 6);
 			returnValue( resistorValue(T7Rmaths(ADCtoMV(read1.getAverage()))), 6);
 		}
@@ -1071,9 +1174,9 @@ void Target::analyse(char target, int direction){
 	default:
 		GPIOoff(B00000000,B00000000);
 		break;
-		}
 	}
 }
+
 
 void Target::returnValue (float value, byte width) {
 
@@ -1163,20 +1266,20 @@ float Target::TRmaths(long reading){
 }
 
 float Target::TCmaths(long time){
-	float temp = (float)0.9225 * ((float)((time*0.985) - 4016.4) / (float)1000);
+	float temp = (float)0.9350 * ((float)((time*0.985) - 4016.4) / (float)1000); //0.9225
 
 	return temp;
 }
 
 void Target::flushBuffers(){
 	#if TARGET_DEBUG
-	Serial.println("Clearing Target buffers...");
+	Serial2.println("Clearing Target buffers...");
 	ref1.clear();
 	read1.clear();
 	ref2.clear();
 	read2.clear();
 	timer.reset();
-	Serial.println("Target buffers clear");
+	Serial2.println("Target buffers clear");
 	#else
 	ref1.clear();
 	read1.clear();
@@ -1200,8 +1303,14 @@ void Target::GPIOinit() {
 	Wire.write(byte(0x00));            // Offset for IODIRA  
 	Wire.write(byte(0x00));             // Data byte going into IODIRA  
 	Wire.endTransmission();
-	#if VERBOSE_BOOT
-	Serial.println("|__ GPIOA -> Output");
+	#if LAPTOP_CONTROL
+		#if VERBOSE_BOOT
+		Serial.println("|__ GPIOA -> Output");
+		#endif
+	#else
+		#if VERBOSE_BOOT
+		Serial2.println("|__ GPIOA -> Output");
+		#endif
 	#endif
 
 	// Configuring IODIRB, Setting to outputs (Port expansder)
@@ -1209,8 +1318,14 @@ void Target::GPIOinit() {
 	Wire.write(byte(0x01));            // Offset for IODIRB
 	Wire.write(byte(0x00));             // Data byte going into IODIRB  
 	Wire.endTransmission();
-	#if VERBOSE_BOOT
-	Serial.println("|__ GPIOB -> Output");
+	#if LAPTOP_CONTROL
+		#if VERBOSE_BOOT
+		Serial.println("|__ GPIOB -> Output");
+		#endif
+	#else
+		#if VERBOSE_BOOT
+		Serial2.println("|__ GPIOB -> Output");
+		#endif
 	#endif
 
 	// Intilly lets say it is all off

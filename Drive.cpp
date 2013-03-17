@@ -8,7 +8,7 @@
 #include "Drive.h"
 #include "Arduino.h"
 
-#define VERSION	2.5	// Software version
+#define VERSION	3.5	// Software version
 
 #define rampDelay	1	 // Delay between speed step changes
 #define RMclkPin	3	// Right Motor clock pin
@@ -63,7 +63,13 @@ void Drive::init() {
 }
 
 void Drive::right(int verbose, int debug, int speed) {
-	if (verbose >= 3) Serial.println("Right Turn");
+	#if DRIVE_DEBUG
+		#if LAPTOP_CONTROL
+			Serial.println("Right Turn");
+		#else
+			Serial2.println("Right Turn");
+		#endif
+	#endif
 	RMdir = 0;
 	LMdir = 0;
 	digitalWrite(RMdirPin, RMdir);
@@ -72,7 +78,13 @@ void Drive::right(int verbose, int debug, int speed) {
 }
 
 void Drive::left(int verbose, int debug, int speed) {
-	if (verbose >= 3) Serial.println("Left Turn");
+	#if DRIVE_DEBUG
+		#if LAPTOP_CONTROL
+			Serial.println("Left Turn");
+		#else
+			Serial2.println("Left Turn");
+		#endif
+	#endif
 	RMdir = 1;
 	LMdir = 1;
 	digitalWrite(RMdirPin, RMdir);
@@ -88,7 +100,13 @@ void Drive::forward(int verbose, int debug, int motor, int speed) {
 
 	switch (motor) {
 	case 1:
-		if (verbose >= 3) Serial.println("Forward: Case 1 - Both Motors");
+		#if DRIVE_DEBUG
+			#if LAPTOP_CONTROL
+				Serial.println("Forward: Case 1 - Both Motors");
+			#else
+				Serial2.println("Forward: Case 1 - Both Motors");
+			#endif
+		#endif
 		if (RMdir == 0) {
 			RMdir = 1;
 			//digital write direction to pin

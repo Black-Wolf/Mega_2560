@@ -18,7 +18,7 @@
 #define EMITTER_PIN		36		// emitter is controlled by digital pin 2
 #define THRESHOLD		500		// Line positioning threshold
 #define CAL_LOOPS		400		// Calibration loops to perform
-#define VERSION			0.5		// Software version
+#define VERSION			1.5		// Software version
 
 #define WHITE			29		// White side sensor IO pin
 #define GREEN			27		// Green side sensor IO pin
@@ -64,9 +64,12 @@ void Line::init() {
 		int i = 0;
 		digitalWrite(13, HIGH);
 
-		#if VERBOSE_BOOT
-			#if LAPTOP_CONTROL
+		#if LAPTOP_CONTROL
+
+				#if VERBOSE_BOOT
 				Serial.println("|__ Sensor calibration starting...");
+				#endif
+
 				for (i = 0; i < CAL_LOOPS; i++) // make the calibration take about 5 seconds
 				{
 					QTR.calibrate(); // 400 reads all sensors 10 times at 1500 us per read (i.e. ~15 ms per call)
@@ -90,17 +93,24 @@ void Line::init() {
 						Serial.print(' ');
 					}
 					Serial.println();
-				#endif		
+				#endif
+
+				#if VERBOSE_BOOT
 				Serial.println("|__ Sensor calibration complete");
+				#endif
+
 				digitalWrite(13, LOW);
 			#else
+				#if VERBOSE_BOOT
 				Serial2.println("|__ Sensor calibration starting...");
+				#endif
+
 				for (i = 0; i < CAL_LOOPS; i++) // make the calibration take about 5 seconds
 				{
 					QTR.calibrate(); // 400 reads all sensors 10 times at 1500 us per read (i.e. ~15 ms per call)
 				}
 
-				if (debug >= 3) {
+				#if LINE_DEBUG
 					// print the calibration minimum values measured when emitters were on
 					Serial2.println("Calibrated Minimum: ");
 					for (i = 0; i < NUM_SENSORS; i++)
@@ -118,47 +128,87 @@ void Line::init() {
 						Serial2.print(' ');
 					}
 					Serial2.println();
-					}		
+				#endif	
+
+				#if VERBOSE_BOOT
 				Serial2.println("|__ Sensor calibration complete");
+				#endif
+
 				digitalWrite(13, LOW);
 			#endif
-		#endif
 	#else
-		Serial.println("|__ Sensor calibration DISABLED");
+		#if LAPTOP_CONTROL
+			Serial.println("|__ Sensor calibration DISABLED");
+		#else
+			Serial2.println("|__ Sensor calibration DISABLED");
+		#endif
 	#endif
 }
 
 void Line::readArray(int verbose, int debug) {
-	if (verbose >= 3) Serial.println("->Refreshing Sensor Data");
+	#if LINE_DEBUG
+		#if LAPTOP_CONTROL
+			Serial.println("->Refreshing Sensor Data");
+		#else
+			Serial2.println("->Refreshing Sensor Data");
+		#endif
+	#endif
 	QTR.read(rawValues);
 	QTR.readCalibrated(calValues);
 
-	if (debug >= 3) {
-		int i = 0;
-		// Having a look at the raw data from the array
-		Serial.println("Raw Values: ");
+	#if LINE_DEBUG
+		#if LAPTOP_CONTROL
+				int i = 0;
+				// Having a look at the raw data from the array
+				Serial.println("Raw Values: ");
 
-		for (i = 0; i < NUM_SENSORS; i++)
-		{
-			Serial.print(rawValues[i]);
-			Serial.print(' ');
-		}
+				for (i = 0; i < NUM_SENSORS; i++)
+				{
+					Serial.print(rawValues[i]);
+					Serial.print(' ');
+				}
 
-		Serial.println();
-		Serial.println();
+				Serial.println();
+				Serial.println();
 
-		// Having a look at the calibrated data from the array
-		Serial.println("Calibrated Values");
+				// Having a look at the calibrated data from the array
+				Serial.println("Calibrated Values");
 
-		for (i = 0; i < NUM_SENSORS; i++)
-		{
-			Serial.print(calValues[i]* 10 / 1001);
-			Serial.print(' ');
-		}
+				for (i = 0; i < NUM_SENSORS; i++)
+				{
+					Serial.print(calValues[i]* 10 / 1001);
+					Serial.print(' ');
+				}
 
-		Serial.println();
-		Serial.println();
-	};
+				Serial.println();
+				Serial.println();
+		#else
+					int i = 0;
+				// Having a look at the raw data from the array
+				Serial2.println("Raw Values: ");
+
+				for (i = 0; i < NUM_SENSORS; i++)
+				{
+					Serial2.print(rawValues[i]);
+					Serial2.print(' ');
+				}
+
+				Serial2.println();
+				Serial2.println();
+
+				// Having a look at the calibrated data from the array
+				Serial2.println("Calibrated Values");
+
+				for (i = 0; i < NUM_SENSORS; i++)
+				{
+					Serial2.print(calValues[i]* 10 / 1001);
+					Serial2.print(' ');
+				}
+
+				Serial2.println();
+				Serial2.println();
+		#endif
+	#endif
 }
 
 int Line::readPattern(int verbose, int debug) {
@@ -250,14 +300,23 @@ int Line::tracking (int verbose, int debug) {
 	// }
 	//}
 
-	if (debug >= 3) {
-		Serial.println();
-		Serial.println("Previous Pattern:");
-		Serial.println(prevPattern);
-		Serial.println("Current Pattern:");
-		Serial.println(pattern);
-		Serial.println();
-	}
+	#if LINE_DEBUG
+		#if LAPTOP_CONTROL
+				Serial.println();
+				Serial.println("Previous Pattern:");
+				Serial.println(prevPattern);
+				Serial.println("Current Pattern:");
+				Serial.println(pattern);
+				Serial.println();
+		#else
+				Serial2.println();
+				Serial2.println("Previous Pattern:");
+				Serial2.println(prevPattern);
+				Serial2.println("Current Pattern:");
+				Serial2.println(pattern);
+				Serial2.println();
+		#endif
+	#endif
 
 	if (pattern == 1) // Black - White
 	{

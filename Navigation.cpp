@@ -9,27 +9,36 @@
 #include "Arduino.h"
 
 // Navigation Control variables
-#define MODE	0
 #define VERSION	1.5	// Software version
 #define FWDbufferSize 1
 #define RWDbufferSize 20
 
 // Speed variables
-#define BASE_SPEED 100
+#define BASE_SPEED 110
 #define k100 1
+#define k95 0.95
 #define k90 0.9
+#define k85 0.85
 #define k80 0.8
+#define k75 0.75
 #define k70 0.7
+#define k65 0.65
 #define k60 0.6
+#define k55 0.55
 #define k50 0.5
+#define k45 0.45
 #define k40 0.4
+#define k35 0.35
 #define k30 0.3
+#define k25 0.25
 #define k20 0.2
+#define k15 0.15
 #define k10 0.1
+#define k05 0.05
 #define k00 0
 
 // Turning Variables
-#define TURN_SPEED	100
+#define TURN_SPEED	(BASE_SPEED * k90)
 #define LR_TURN_DELAY	400
 
 // Target Acquisition variables
@@ -103,7 +112,7 @@ void Navigation::init() {
 // Position options:	+ve=> Correct left	-ve=> Correct right			  //					
 //------------------------------------------------------------------------//
 
-bool Navigation::forward(int verbose, int debug, int blocks) {
+bool Navigation::forward(int verbose, int debug, int blocks, int targetDetect) {
 	if (verbose >= 3) {
 		Serial.print("Nav Forward: ");
 		Serial.print(blocks);
@@ -118,16 +127,19 @@ bool Navigation::forward(int verbose, int debug, int blocks) {
 	// -> Calculate wheel speed based on tracking info
 	// -> Check if in motion or not
 	// -> Update wheel speed / begin motion
+	int tempPatternSide = 0;
 	blocksTravelled = -1;
 	lastPattern = 0;
 	buff.clear();
 	while (blocksTravelled < blocks) {
 
 		// Check to see if on a target
-		//if (digitalRead(REEDpin) == 1) {
-		//	blocksTravelled = blocks + 1;
-		//	Serial1.println("I found a target!");
-		//}
+		if (targetDetect == 1) {
+			if (digitalRead(REEDpin) == 0) {
+				blocksTravelled = blocks + 1;
+				//Serial1.println("I found a target!");
+			}
+		}
 
 		// push tracking info to the ring buffer
 		buff.addValue( line.tracking(verbose, debug) );
@@ -158,11 +170,11 @@ bool Navigation::forward(int verbose, int debug, int blocks) {
 				// -> check if in motion or not
 				if (inMotion == 0) {
 					// -> drive right motor slowly
-					drive.forward(verbose, debug, 2, (BASE_SPEED*k50));
+					drive.forward(verbose, debug, 2, (BASE_SPEED*k80));
 				}
 				else {
 					// -> slow left motor
-					drive.forward(verbose, debug, 3, (BASE_SPEED*k90));
+					drive.forward(verbose, debug, 3, (BASE_SPEED*k95));
 				}
 
 			}
@@ -171,11 +183,11 @@ bool Navigation::forward(int verbose, int debug, int blocks) {
 				// -> check if in motion or not
 				if (inMotion == 0) {
 					// -> drive right motor slowly
-					drive.forward(verbose, debug, 2, (BASE_SPEED*k50));
+					drive.forward(verbose, debug, 2, (BASE_SPEED*k80));
 				}
 				else {
 					// -> slow left motor
-					drive.forward(verbose, debug, 3, (BASE_SPEED*k80));
+					drive.forward(verbose, debug, 3, (BASE_SPEED*k90));
 				}
 
 			}
@@ -184,11 +196,11 @@ bool Navigation::forward(int verbose, int debug, int blocks) {
 				// -> check if in motion or not
 				if (inMotion == 0) {
 					// -> drive right motor slowly
-					drive.forward(verbose, debug, 2, (BASE_SPEED*k50));
+					drive.forward(verbose, debug, 2, (BASE_SPEED*k80));
 				}
 				else {
 					// -> slow left motor
-					drive.forward(verbose, debug, 3, (BASE_SPEED*k70));
+					drive.forward(verbose, debug, 3, (BASE_SPEED*k85));
 				}
 
 			}
@@ -197,11 +209,11 @@ bool Navigation::forward(int verbose, int debug, int blocks) {
 				// -> check if in motion or not
 				if (inMotion == 0) {
 					// -> drive right motor slowly
-					drive.forward(verbose, debug, 2, (BASE_SPEED*k50));
+					drive.forward(verbose, debug, 2, (BASE_SPEED*k80));
 				}
 				else {
 					// -> slow left motor
-					drive.forward(verbose, debug, 3, (BASE_SPEED*k60));
+					drive.forward(verbose, debug, 3, (BASE_SPEED*k80));
 				}
 
 			}
@@ -213,11 +225,11 @@ bool Navigation::forward(int verbose, int debug, int blocks) {
 				// -> check if in motion or not
 				if (inMotion == 0) {
 					// -> drive left motor slowly
-					drive.forward(verbose, debug, 3, (BASE_SPEED*k50));
+					drive.forward(verbose, debug, 3, (BASE_SPEED*k80));
 				}
 				else {
 					// -> slow right motor
-					drive.forward(verbose, debug, 2, (BASE_SPEED*k90));
+					drive.forward(verbose, debug, 2, (BASE_SPEED*k95));
 				}
 
 			}
@@ -226,11 +238,11 @@ bool Navigation::forward(int verbose, int debug, int blocks) {
 				// -> check if in motion or not
 				if (inMotion == 0) {
 					// -> drive left motor slowly
-					drive.forward(verbose, debug, 3, (BASE_SPEED*k50));
+					drive.forward(verbose, debug, 3, (BASE_SPEED*k80));
 				}
 				else {
 					// -> slow right motor
-					drive.forward(verbose, debug, 2, (BASE_SPEED*k80));
+					drive.forward(verbose, debug, 2, (BASE_SPEED*k90));
 				}
 
 			}
@@ -239,11 +251,11 @@ bool Navigation::forward(int verbose, int debug, int blocks) {
 				// -> check if in motion or not
 				if (inMotion == 0) {
 					// -> drive left motor slowly
-					drive.forward(verbose, debug, 3, (BASE_SPEED*k50));
+					drive.forward(verbose, debug, 3, (BASE_SPEED*k80));
 				}
 				else {
 					// -> slow right motor
-					drive.forward(verbose, debug, 2, (BASE_SPEED*k70));
+					drive.forward(verbose, debug, 2, (BASE_SPEED*k85));
 				}
 
 			}
@@ -252,34 +264,51 @@ bool Navigation::forward(int verbose, int debug, int blocks) {
 				// -> check if in motion or not
 				if (inMotion == 0) {
 					// -> drive left motor slowly
-					drive.forward(verbose, debug, 3, (BASE_SPEED*k50));
+					drive.forward(verbose, debug, 3, (BASE_SPEED*k80));
 				}
 				else {
 					// -> slow right motor
-					drive.forward(verbose, debug, 2, (BASE_SPEED*k60));
+					drive.forward(verbose, debug, 2, (BASE_SPEED*k80));
 				}
 			}
 		}
+
+		// Check to see if on a target
+		if (targetDetect == 1) {
+			if (digitalRead(REEDpin) == 0) {
+				blocksTravelled = blocks + 1;
+			}
+		}
+
+		// push tracking info to the ring buffer
+		buff.addValue( line.tracking(verbose, debug) );
+
+		// store non-buffered pattern info from array
+		currPattern = line.getPrevPatternSide();
+
+		if (currPattern != lastPattern) {
+			if (currPattern == 1 || currPattern == 2 && lastPattern == 0 || lastPattern == 1 || lastPattern == 2) {
+				blocksTravelled++;
+			}
+			lastPattern = currPattern;
+		}
+
 	}
 
 	inMotion = 0;
 	drive.stop(verbose, debug, 1);
 
-	currPosition = line.tracking(verbose, debug);
-	while (currPosition != 0) {
-		currPosition = line.tracking(verbose, debug);
+	//while( currPattern != 1 || currPattern != 2){
+	//	// push tracking info to the ring buffer
+	//	buff.addValue( line.tracking(verbose, debug) );
 
-		if (currPosition > 0) {
-			drive.stop(verbose, debug, 1);
-			drive.forward(verbose, debug, 2, (BASE_SPEED*k50));
-		}
-		if (currPosition < 0) {
-			drive.stop(verbose, debug, 1);
-			drive.forward(verbose, debug, 3, (BASE_SPEED*k50));
-		}
-	}
+	//	// store non-buffered pattern info from array
+	//	currPattern = line.getPrevPatternSide();
 
-	drive.stop(verbose, debug, 1);
+	//	drive.backward(verbose, debug, 1, BASE_SPEED*k60);
+	//}
+
+	//drive.stop(verbose, debug, 1);
 
 	return true;
 }
@@ -356,11 +385,11 @@ bool Navigation::backward(int verbose, int debug, int blocks) {
 
 		if (currPosition > 0) {
 			drive.stop(verbose, debug, 1);
-			drive.forward(verbose, debug, 2, (BASE_SPEED*k30));
+			drive.forward(verbose, debug, 2, (BASE_SPEED*k50));
 		}
 		if (currPosition < 0) {
 			drive.stop(verbose, debug, 1);
-			drive.forward(verbose, debug, 3, (BASE_SPEED*k30));
+			drive.forward(verbose, debug, 3, (BASE_SPEED*k50));
 		}
 
 		drive.stop(verbose, debug, 1);
@@ -428,9 +457,11 @@ bool Navigation::turnLeft(int verbose, int debug) {
 bool Navigation::targetEngage(int verbose, int debug) {
 
 			
-	while (digitalRead(REEDpin) != 0) {
-	drive.forward(verbose, debug, 1, BASE_SPEED*k60);
-		}
+	//while (digitalRead(REEDpin) != 0) {
+	//drive.forward(verbose, debug, 1, BASE_SPEED*k60);
+	//	}
+
+	forward(verbose, debug, 1, 1);
 
 	drive.stop(verbose, debug, 1);
 
@@ -440,11 +471,11 @@ bool Navigation::targetEngage(int verbose, int debug) {
 
 		if (currPosition > 0) {
 			drive.stop(verbose, debug, 1);
-			drive.forward(verbose, debug, 2, (BASE_SPEED*k50));
+			drive.forward(verbose, debug, 2, (BASE_SPEED*k80));
 		}
 		if (currPosition < 0) {
 			drive.stop(verbose, debug, 1);
-			drive.forward(verbose, debug, 3, (BASE_SPEED*k50));
+			drive.forward(verbose, debug, 3, (BASE_SPEED*k80));
 		}
 	}
 
@@ -459,7 +490,7 @@ bool Navigation::targetRetract(int verbose, int debug) {
 	}
 		delay(500);
 		drive.stop(verbose, debug, 1);
-		forward(verbose, debug, 0);
+		forward(verbose, debug, 0, 0);
 
 	return true;
 }

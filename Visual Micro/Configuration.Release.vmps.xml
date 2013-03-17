@@ -1,0 +1,9 @@
+<VisualMicro>
+  <Program Name="Mega_2560" Ext=".ino" Location="C:\Users\Black Wolf\Dropbox\UoB\Work\Projects\Buggy\Arduino\Mega_2560">
+    <Compile IsCompiled="0" CompilerErrors="0" ConfigurationName="Release" StopOnError="False" OptimiseLibs="True" OptimiseCore="True" BuildPath="C:\Users\Black Wolf\AppData\Local\VMicro\Arduino\Builds\Mega_2560\mega2560" />
+    <Platform Name="Arduino">
+      <Board Name="mega2560" Description="Arduino Mega 2560 or Mega ADK" CoreFolder="C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0\hardware\arduino\cores\arduino" VariantFullPath="C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0\hardware\arduino\variants\mega" />
+    </Platform>
+    <Debug AutoReportI2CScan="0" />
+  </Program>
+</VisualMicro>

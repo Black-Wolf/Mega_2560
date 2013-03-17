@@ -16,7 +16,7 @@ public:
 	Navigation();
 	void fw();
 	void init();
-	bool forward(int verbose, int debug, int blocks);
+	bool forward(int verbose, int debug, int blocks, int targetDetect);
 	bool backward(int verbose, int debug, int blocks);
 	bool turnRight(int verbose, int debug);
 	bool turnLeft(int verbose, int debug);

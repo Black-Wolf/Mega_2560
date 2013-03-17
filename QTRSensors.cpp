@@ -1,5 +1,5 @@
 /*
-  QTRSensors.cpp - Arduino library for using Pololu QTR reflectance
+    QTRSensors.cpp - Arduino library for using Pololu QTR reflectance
 	sensors and reflectance sensor arrays: QTR-1A, QTR-8A, QTR-1RC, and 
 	QTR-8RC.  The object used will determine the type of the sensor (either
 	QTR-xA or QTR-xRC).  Then simply specify in the constructor which 
@@ -203,7 +203,7 @@ void QTRSensors::calibrateOnOrOff(unsigned int **calibratedMinimum,
 		*calibratedMinimum = (unsigned int*)malloc(sizeof(unsigned int)*_numSensors);
 
 		// If the malloc failed, don't continue.
-		if(*calibratedMinimum == 0)
+		if(*calibratedMinimum == 0) 
 			return;
 
 		for(i=0;i<_numSensors;i++)

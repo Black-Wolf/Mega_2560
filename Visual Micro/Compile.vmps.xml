@@ -1,104 +1,113 @@
 <VisualMicro>
   <Program Name="Mega_2560" Ext=".ino" Location="C:\Users\Black Wolf\Dropbox\UoB\Work\Projects\Buggy\Arduino\Mega_2560">
-    <Compile CompilerErrors="0" ConfigurationName="Debug" StopOnError="False" OptimiseLibs="True" OptimiseCore="True" BuildPath="C:\Users\Black Wolf\AppData\Local\VMicro\Arduino\Builds\Mega_2560\mega2560" IncludeDebug="0" IncludesDebug="0" SketchName="Mega_2560" IsCompiled="1" />
+    <Compile CompilerErrors="0" ConfigurationName="Release" StopOnError="False" OptimiseLibs="True" OptimiseCore="True" BuildPath="C:\Users\Black Wolf\AppData\Local\VMicro\Arduino\Builds\Mega_2560\mega2560" IncludeDebug="0" IncludesDebug="0" SketchName="Mega_2560" IsCompiled="1" />
     <Platform Name="Arduino">
       <Board Name="mega2560" Description="Arduino Mega 2560 or Mega ADK" CoreFolder="C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0\hardware\arduino\cores\arduino" VariantFullPath="C:\Users\Black Wolf\Dropbox\Arduino\arduino-1.0\hardware\arduino\variants\mega" />
     </Platform>
-    <Debug AutoReportFreeMemory="0" AutoReportAnalogPinsFrequency="" />
     <VCCodeModel>
       <VCCodeMacros>
-        <VCCodeMacro Name="LAPTOP_CONTROL" Value="true" />
+        <VCCodeMacro Name="LAPTOP_CONTROL" Value="false" />
         <VCCodeMacro Name="ARDUINO" Value="10" />
         <VCCodeMacro Name="DEV_MODE" Value="false" />
         <VCCodeMacro Name="__AVR_ATmega2560__" Value="" />
-        <VCCodeMacro Name="MOVEMENT_ENABLED" Value="false" />
+        <VCCodeMacro Name="MOVEMENT_ENABLED" Value="true" />
         <VCCodeMacro Name="VERSION" Value="2.0" />
         <VCCodeMacro Name="RunningAverage_h" Value="" />
         <VCCodeMacro Name="version" Value="2.0" />
         <VCCodeMacro Name="F_CPU" Value="16000000L" />
-        <VCCodeMacro Name="CALIBRATION_ENABLED" Value="false" />
-        <VCCodeMacro Name="bufferSize" Value="20" />
+        <VCCodeMacro Name="CALIBRATION_ENABLED" Value="true" />
+        <VCCodeMacro Name="bufferSize" Value="5" />
         <VCCodeMacro Name="__AVR__" Value="" />
         <VCCodeMacro Name="D0" Value="45" />
         <VCCodeMacro Name="__cplusplus" Value="" />
         <VCCodeMacro Name="VERBOSE_BOOT" Value="true" />
         <VCCodeMacro Name="D1" Value="43" />
         <VCCodeMacro Name="__attribute__" Value="" />
+        <VCCodeMacro Name="MEASUREMENT_RETURN" Value="false" />
         <VCCodeMacro Name="D2" Value="41" />
         <VCCodeMacro Name="__inline__" Value="" />
-        <VCCodeMacro Name="MAIN_DEBUG" Value="true" />
         <VCCodeMacro Name="D3" Value="39" />
         <VCCodeMacro Name="__asm__" Value="" />
-        <VCCodeMacro Name="TARGET_DEBUG" Value="true" />
+        <VCCodeMacro Name="MAIN_DEBUG" Value="false" />
         <VCCodeMacro Name="DV" Value="19" />
         <VCCodeMacro Name="__extension__" Value="" />
-        <VCCodeMacro Name="NAV_DEBUG" Value="false" />
-        <VCCodeMacro Name="VERSION" Value="2.5" />
+        <VCCodeMacro Name="TARGET_DEBUG" Value="false" />
+        <VCCodeMacro Name="VERSION" Value="3.5" />
         <VCCodeMacro Name="__ATTR_PURE__" Value="" />
         <VCCodeMacro Name="STOPWATCH_LIB_VERSION" Value="&quot;0.1.03&quot;" />
-        <VCCodeMacro Name="LINE_DEBUG" Value="false" />
-        <VCCodeMacro Name="MODE" Value="0" />
+        <VCCodeMacro Name="NAV_DEBUG" Value="false" />
+        <VCCodeMacro Name="VERSION" Value="1.5" />
         <VCCodeMacro Name="__ATTR_CONST__" Value="" />
         <VCCodeMacro Name="VERSION" Value="2.0" />
-        <VCCodeMacro Name="DRIVE_DEBUG" Value="false" />
+        <VCCodeMacro Name="LINE_DEBUG" Value="false" />
         <VCCodeMacro Name="rampDelay" Value="1" />
-        <VCCodeMacro Name="VERSION" Value="0.1" />
-        <VCCodeMacro Name="__inline__" Value="" />
-        <VCCodeMacro Name="RMclkPin" Value="3" />
         <VCCodeMacro Name="FWDbufferSize" Value="1" />
+        <VCCodeMacro Name="__inline__" Value="" />
+        <VCCodeMacro Name="DRIVE_DEBUG" Value="false" />
+        <VCCodeMacro Name="RMclkPin" Value="3" />
+        <VCCodeMacro Name="RWDbufferSize" Value="20" />
         <VCCodeMacro Name="__asm__" Value="" />
         <VCCodeMacro Name="pin1" Value="25" />
         <VCCodeMacro Name="RMdirPin" Value="51" />
-        <VCCodeMacro Name="RWDbufferSize" Value="20" />
         <VCCodeMacro Name="__volatile__" Value="" />
         <VCCodeMacro Name="pin2" Value="26" />
         <VCCodeMacro Name="RMprePin" Value="49" />
         <VCCodeMacro Name="NUM_SENSORS" Value="8" />
-        <VCCodeMacro Name="version" Value="1.5" />
+        <VCCodeMacro Name="version" Value="2.5" />
         <VCCodeMacro Name="__builtin_va_list" Value="" />
         <VCCodeMacro Name="LMclkPin" Value="2" />
         <VCCodeMacro Name="TIMEOUT" Value="1500" />
+        <VCCodeMacro Name="BASE_SPEED" Value="110" />
         <VCCodeMacro Name="__builtin_va_start" Value="" />
         <VCCodeMacro Name="LMdirPin" Value="47" />
         <VCCodeMacro Name="EMITTER_PIN" Value="36" />
         <VCCodeMacro Name="verbose" Value="2" />
-        <VCCodeMacro Name="BASE_SPEED" Value="100" />
+        <VCCodeMacro Name="k100" Value="1" />
         <VCCodeMacro Name="__builtin_va_end" Value="" />
         <VCCodeMacro Name="LMprePin" Value="53" />
         <VCCodeMacro Name="THRESHOLD" Value="500" />
         <VCCodeMacro Name="debug" Value="0" />
-        <VCCodeMacro Name="k100" Value="1" />
+        <VCCodeMacro Name="k95" Value="0.95" />
         <VCCodeMacro Name="__DOXYGEN__" Value="" />
         <VCCodeMacro Name="CAL_LOOPS" Value="400" />
         <VCCodeMacro Name="development" Value="0" />
         <VCCodeMacro Name="k90" Value="0.9" />
         <VCCodeMacro Name="RUNNINGAVERAGE_LIB_VERSION" Value="&quot;0.2.02&quot;" />
         <VCCodeMacro Name="prog_void" Value="" />
-        <VCCodeMacro Name="VERSION" Value="0.5" />
-        <VCCodeMacro Name="k80" Value="0.8" />
+        <VCCodeMacro Name="VERSION" Value="1.5" />
+        <VCCodeMacro Name="k85" Value="0.85" />
         <VCCodeMacro Name="PGM_VOID_P" Value="int" />
-        <VCCodeMacro Name="k70" Value="0.7" />
+        <VCCodeMacro Name="k80" Value="0.8" />
         <VCCodeMacro Name="NOINLINE" Value="__attribute__((noinline))" />
         <VCCodeMacro Name="WHITE" Value="29" />
-        <VCCodeMacro Name="k60" Value="0.6" />
+        <VCCodeMacro Name="k75" Value="0.75" />
         <VCCodeMacro Name="GREEN" Value="27" />
+        <VCCodeMacro Name="k70" Value="0.7" />
+        <VCCodeMacro Name="k65" Value="0.65" />
+        <VCCodeMacro Name="k60" Value="0.6" />
+        <VCCodeMacro Name="k55" Value="0.55" />
         <VCCodeMacro Name="k50" Value="0.5" />
+        <VCCodeMacro Name="k45" Value="0.45" />
         <VCCodeMacro Name="k40" Value="0.4" />
+        <VCCodeMacro Name="k35" Value="0.35" />
         <VCCodeMacro Name="k30" Value="0.3" />
+        <VCCodeMacro Name="k25" Value="0.25" />
         <VCCodeMacro Name="k20" Value="0.2" />
-        <VCCodeMacro Name="k10" Value="0.1" />
-        <VCCodeMacro Name="k00" Value="0" />
-        <VCCodeMacro Name="TURN_SPEED" Value="100" />
-        <VCCodeMacro Name="LR_TURN_DELAY" Value="400" />
+        <VCCodeMacro Name="k15" Value="0.15" />
         <VCCodeMacro Name="QTRSensors_h" Value="" />
-        <VCCodeMacro Name="REEDpin" Value="23" />
+        <VCCodeMacro Name="k10" Value="0.1" />
+        <VCCodeMacro Name="k05" Value="0.05" />
         <VCCodeMacro Name="QTR_EMITTERS_OFF" Value="0" />
+        <VCCodeMacro Name="k00" Value="0" />
         <VCCodeMacro Name="QTR_RC" Value="0" />
         <VCCodeMacro Name="QTR_EMITTERS_ON" Value="1" />
         <VCCodeMacro Name="QTR_A" Value="1" />
         <VCCodeMacro Name="QTR_EMITTERS_ON_AND_OFF" Value="2" />
+        <VCCodeMacro Name="TURN_SPEED" Value="(BASE_SPEED * k90)" />
         <VCCodeMacro Name="QTR_NO_EMITTER_PIN" Value="255" />
+        <VCCodeMacro Name="LR_TURN_DELAY" Value="400" />
         <VCCodeMacro Name="QTR_MAX_SENSORS" Value="16" />
+        <VCCodeMacro Name="REEDpin" Value="23" />
       </VCCodeMacros>
       <VCCodeVariables>
         <VCCodeVariable Name="portA" />
